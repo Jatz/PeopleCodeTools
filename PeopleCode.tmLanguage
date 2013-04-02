@@ -2,7 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <key>fileTypes</key>
+	<key>fileTypes</key>
 	<array>
 		<string>ppl</string>
 		<string>pcode</string>
@@ -192,23 +192,6 @@
 					<key>name</key>
 					<string>comment.block.pcode</string>
 				</dict>
-				<dict>
-					<key>captures</key>
-					<dict>
-						<key>1</key>
-						<dict>
-							<key>name</key>
-							<string>comment.line.double-slash.pcode</string>
-						</dict>
-						<key>2</key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.definition.comment.pcode</string>
-						</dict>
-					</dict>
-					<key>match</key>
-					<string>\s*((//).*$\n?)</string>
-				</dict>
 			</array>
 		</dict>
 		<key>comments-inline</key>
@@ -231,23 +214,6 @@
 					<key>name</key>
 					<string>comment.block.pcode</string>
 				</dict>
-				<dict>
-					<key>captures</key>
-					<dict>
-						<key>1</key>
-						<dict>
-							<key>name</key>
-							<string>comment.line.double-slash.pcode</string>
-						</dict>
-						<key>2</key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.definition.comment.pcode</string>
-						</dict>
-					</dict>
-					<key>match</key>
-					<string>\s*((//).*$\n?)</string>
-				</dict>
 			</array>
 		</dict>
 		<key>comments-methods</key>
@@ -269,23 +235,6 @@
 					<string>\+/</string>
 					<key>name</key>
 					<string>comment.block.pcode</string>
-				</dict>
-				<dict>
-					<key>captures</key>
-					<dict>
-						<key>1</key>
-						<dict>
-							<key>name</key>
-							<string>comment.line.double-slash.pcode</string>
-						</dict>
-						<key>2</key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.definition.comment.pcode</string>
-						</dict>
-					</dict>
-					<key>match</key>
-					<string>\s*((//).*$\n?)</string>
 				</dict>
 			</array>
 		</dict>
@@ -637,50 +586,6 @@
 							<string>punctuation.definition.string.end.pcode</string>
 						</dict>
 					</dict>
-					<key>name</key>
-					<string>string.quoted.double.pcode</string>
-					<key>patterns</key>
-					<array>
-						<dict>
-							<key>match</key>
-							<string>\\.</string>
-							<key>name</key>
-							<string>constant.character.escape.pcode</string>
-						</dict>
-					</array>
-				</dict>
-				<dict>
-					<key>begin</key>
-					<string>'</string>
-					<key>beginCaptures</key>
-					<dict>
-						<key>0</key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.definition.string.begin.pcode</string>
-						</dict>
-					</dict>
-					<key>end</key>
-					<string>'</string>
-					<key>endCaptures</key>
-					<dict>
-						<key>0</key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.definition.string.end.pcode</string>
-						</dict>
-					</dict>
-					<key>name</key>
-					<string>string.quoted.single.pcode</string>
-					<key>patterns</key>
-					<array>
-						<dict>
-							<key>match</key>
-							<string>\\.</string>
-							<key>name</key>
-							<string>constant.character.escape.pcode</string>
-						</dict>
-					</array>
 				</dict>
 			</array>
 		</dict>
