@@ -239,7 +239,7 @@
 			<array>
 				<dict>
 					<key>match</key>
-					<string>(method)\s+([\w]+)\(</string>
+					<string>(?&lt;=: )(method) ([\w]+)</string>
 					<key>name</key>
 					<string>entity.name.function.pcode</string>
 				</dict>
