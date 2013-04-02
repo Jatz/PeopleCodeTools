@@ -246,7 +246,7 @@
 					<key>comment</key>
 					<string>comment out single line REM statements</string>
 					<key>match</key>
-					<string>\s*\b[rR][eE][mM](.*)$</string>
+					<string>\s*\b(?&lt;!&amp;)[rR][eE][mM](.*)$</string>
 					<key>name</key>
 					<string>comment.block.pcode</string>
 				</dict>
@@ -567,7 +567,7 @@
 			<array>
 				<dict>
 					<key>begin</key>
-					<string>"</string>
+					<string>(")</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>0</key>
@@ -577,7 +577,7 @@
 						</dict>
 					</dict>
 					<key>end</key>
-					<string>"</string>
+					<string>(")</string>
 					<key>endCaptures</key>
 					<dict>
 						<key>0</key>
@@ -586,6 +586,32 @@
 							<string>punctuation.definition.string.end.pcode</string>
 						</dict>
 					</dict>
+					<key>name</key>
+					<string>string.quoted.double.pcode</string>
+				</dict>
+				<dict>
+					<key>begin</key>
+					<string>'</string>
+					<key>beginCaptures</key>
+					<dict>
+						<key>0</key>
+						<dict>
+							<key>name</key>
+							<string>punctuation.definition.string.begin.pcode</string>
+						</dict>
+					</dict>
+					<key>end</key>
+					<string>'</string>
+					<key>endCaptures</key>
+					<dict>
+						<key>0</key>
+						<dict>
+							<key>name</key>
+							<string>punctuation.definition.string.end.pcode</string>
+						</dict>
+					</dict>
+					<key>name</key>
+					<string>string.quoted.single.pcode</string>
 				</dict>
 			</array>
 		</dict>
