@@ -226,7 +226,7 @@
 					<key>comment</key>
 					<string>comment out single line REM statements</string>
 					<key>match</key>
-					<string>\s*\b(?&lt;!&amp;)[rR][eE][mM](.*)$</string>
+					<string>\s*\b(?&lt;!&amp;)[rR][eE][mM]\b(.*)$</string>
 					<key>name</key>
 					<string>comment.block.pcode</string>
 				</dict>
