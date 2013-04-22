@@ -404,6 +404,12 @@
 					<key>name</key>
 					<string>entity.name.function.tracesql</string>
 				</dict>
+				<dict>
+					<key>match</key>
+					<string>(?&lt;=GETSTMT Stmt=)[^,]+</string>
+					<key>name</key>
+					<string>entity.name.function.tracesql</string>
+				</dict>
 			</array>
 		</dict>
 		<key>values</key>
