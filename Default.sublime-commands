@@ -1,0 +1,6 @@
+[
+    {
+        "caption": "PeopleCode Tools: Extract PeopleCode Call Stack",
+        "command": "extractpccallstack"
+    }
+]
