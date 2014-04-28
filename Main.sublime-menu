@@ -1,0 +1,20 @@
+[
+    {
+        "id": "selection",
+        "caption": "Selection",
+        "children":
+        [
+            {
+                "id": "extract",
+                "caption": "Extract",
+                "children":
+                [
+                    {
+                        "caption": "Extract PeopleCode Call Stack",
+                        "command": "extractpccallstack"
+                    }
+                ]
+            }
+        ]
+    }
+]
