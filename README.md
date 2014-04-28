@@ -10,7 +10,7 @@ The syntax highlighter applies to files with the following extensions:
 - ppl (PeopleCode)
 - pcode (PeopleCode)
 - tracesql (PeopleSoft Trace Files)
-- trc (COBOL)
+- trc (PeopleSoft COBOL Trace Files)
  
 
 ### Sublime Text Extract Call Stack tool
