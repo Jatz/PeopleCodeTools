@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>fileTypes</key>
+	<array>
+		<string>trc</string>
+	</array>
+	<key>name</key>
+	<string>PeopleSoft COBOL Trace</string>
+	<key>patterns</key>
+	<array>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.other.import.pcode</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>storage.modifier.import.pcode</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.terminator.pcode</string>
+				</dict>
+			</dict>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>#code</string>
+		</dict>
+	</array>
+	<key>repository</key>
+	<dict>
+		<key>code</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#tracesql</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#keywords</string>
+				</dict>
+			</array>
+		</dict>
+		<key>keywords</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>match</key>
+					<string>\b(Time|Line|Elapsed|SQL|Cursor|Return|DB API Statement|Statement|Count|R e t r i e v e|C o m p i l e|E x e c u t e|F e t c h|STMT TOTALS)\b</string>
+					<key>name</key>
+					<string>keyword</string>
+				</dict>
+				<dict>
+					<key>match</key>
+					<string>-|PeopleSoft Batch Timings Report:|PeopleSoft Batch Statistics|All timings in seconds|Encoding Scheme Used:|% SQL|% Total|Total:|Percent of Total:|Total in SQL:|Total in Application:|Total Run Time:|Total Statements:|Max Cursors Connected:</string>
+					<key>name</key>
+					<string>keyword</string>
+				</dict>
+			</array>
+		</dict>
+		<key>tracesql</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>match</key>
+					<string>(?&lt;=COM Stmt=)(.+)$</string>
+					<key>name</key>
+					<string>entity.name.function.tracesql</string>
+				</dict>
+				<dict>
+					<key>match</key>
+					<string>(?&lt;=GETSTMT Stmt=)[^,]+</string>
+					<key>name</key>
+					<string>entity.name.function.tracesql</string>
+				</dict>
+				<dict>
+					<key>match</key>
+					<string>(?&lt;=STMT before Meta-Sql expansion=)(.+)$</string>
+					<key>name</key>
+					<string>entity.name.function.tracesql</string>
+				</dict>
+				<dict>
+					<key>match</key>
+					<string>(?&lt;=GETSTMT Stmt\(cached\)=)[^,]+</string>
+					<key>name</key>
+					<string>entity.name.function.tracesql</string>
+				</dict>
+				<dict>
+					<key>match</key>
+					<string>(?&lt;=CEX Stmt=)(.+)$</string>
+					<key>name</key>
+					<string>entity.name.function.tracesql</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
+	<key>scopeName</key>
+	<string>source.peoplecode.tracepsoftcobol</string>
+	<key>uuid</key>
+	<string>cd1113f9-149f-4e18-9dec-c39a75a7c223</string>
+</dict>
+</plist>
