@@ -17,4 +17,4 @@ The syntax highlighter applies to files with the following extensions:
 
 This tool will extract and format the call stack from a PeopleSoft trace file with a 4044 PeopleCode trace.
 
-This tool ONLY applies to PeopleSoft Trace Files that have a PeopleCode trace value of 4044. Trace files that haven't been generated with the 4044 trace flags will not produce enough information for the tool to format the call stack. To use the tool, open a .tracesql file in Sublime Text and then run the "PeopleCode Tools: Extract PeopleCode Call Stack" command from the command palette.
+This tool ONLY applies to PeopleSoft Trace Files that have a PeopleCode trace value of 4044. Trace files that haven't been generated using the 4044 trace flags will not produce enough information for the tool to format the call stack. To use the tool, open a .tracesql file in Sublime Text and then run the "PeopleCode Tools: Extract PeopleCode Call Stack" command from the command palette.
