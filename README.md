@@ -13,7 +13,7 @@ The syntax highlighter applies to files with the following extensions:
 - tracesql (PeopleSoft Trace Files)
 - trc (PeopleSoft COBOL Trace Files)
 
-Note: This tool will not work so well on large files (i.e. files greater than 10 MB)
+Note: This tool will not work so well on large files (i.e. files greater than 5 MB)
 
 ### Sublime Text Extract Call Stack tool
 
@@ -24,3 +24,5 @@ This tool ONLY applies to PeopleSoft Trace Files that have a PeopleCode trace va
 ### Sublime Text Tidy PeopleCode Trace tool
 
 This tool will tidy up a tracesql file. At the moment all this tool does is add a matching quote to the end of certain lines that have an odd number of quotes, ensuring that the syntax highlighting of the PeopleCode trace file works correctly.
+
+Note: This tool will not work so well on large files (i.e. files greater than 5 MB)
