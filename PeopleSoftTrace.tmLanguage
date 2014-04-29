@@ -169,7 +169,7 @@
 			<array>
 				<dict>
 					<key>match</key>
-					<string>(Function)\s+([\w]+)\(</string>
+					<string>(Function)\s+([\w]+)</string>
 					<key>name</key>
 					<string>entity.name.function.pcode</string>
 				</dict>
