@@ -1,5 +1,7 @@
 import sublime, sublime_plugin
-import PeopleCodeTools.regex
+from PeopleCodeTools.regex import regex_extract
+from PeopleCodeTools.regex import regex_findall
+from PeopleCodeTools.regex import greedy_replace
 
 class TidypctraceCommand(sublime_plugin.TextCommand):
     
@@ -24,5 +26,9 @@ class TidypctraceCommand(sublime_plugin.TextCommand):
             allLines = allLines + lineContents + '\n'                        
         
         view.replace(edit, alltextreg, allLines)
-        
 
+        extractions = []
+
+        ## Remove all blank spaces
+        regions = regex_findall(self, find='^\n', flags=0, replace='', extractions=extractions)
+        greedy_replace(self, extractions, regions)
