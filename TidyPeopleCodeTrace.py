@@ -15,7 +15,7 @@ class TidypctraceCommand(sublime_plugin.TextCommand):
 
         ## Fix up unmatched quotes  
         extractions = []
-        regions = regex_findall(self, find='(.*)("[^";\s>]+$)', flags=0, replace='\\1\\2"', extractions=extractions)
+        regions = regex_findall(self, find='(.*"[^";\s>]+$)', flags=0, replace='\\1"', extractions=extractions)
         greedy_replace(self, extractions, regions)
 
         ## Remove header junk
