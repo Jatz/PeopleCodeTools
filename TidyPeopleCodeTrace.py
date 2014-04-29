@@ -20,15 +20,15 @@ class TidypctraceCommand(sublime_plugin.TextCommand):
 
         ## Fix up unmatched quotes  
         extractions = []
-        regions = regex_findall(self, find='(.*"[^";\)\s>]+$)', flags=0, replace='\\1" - Quote added by Tidy', extractions=extractions)
+        regions = regex_findall(self, find='(.*"[^";\)\s>]+$)', flags=0, replace='\\1" - quote added by Tidy', extractions=extractions)
         greedy_replace(self, extractions, regions)
 
         extractions = []
-        regions = regex_findall(self, find='(.*\("[^"]+$)', flags=0, replace='\\1" - Quote added by Tidy', extractions=extractions)
+        regions = regex_findall(self, find='(.*\("[^"]+$)', flags=0, replace='\\1" - quote added by Tidy', extractions=extractions)
         greedy_replace(self, extractions, regions)
 
         extractions = []
-        regions = regex_findall(self, find='(.*="$)', flags=0, replace='\\1" - Quote added by Tidy', extractions=extractions)
+        regions = regex_findall(self, find='(.*="$)', flags=0, replace='\\1" - quote added by Tidy', extractions=extractions)
         greedy_replace(self, extractions, regions)    
         
         ## Remove all blank spaces
