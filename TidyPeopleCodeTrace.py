@@ -28,7 +28,11 @@ class TidypctraceCommand(sublime_plugin.TextCommand):
         view.replace(edit, alltextreg, allLines)
 
         extractions = []
+        
+        ## Remove header timings
+        regions = regex_findall(self, find='^PSAPPSRV.*?(\d\.\d{6})\s', flags=0, replace='', extractions=extractions)
+        greedy_replace(self, extractions, regions)
 
-        ## Remove all blank spaces
+        ## Remove all blank spaces       
         regions = regex_findall(self, find='^\n', flags=0, replace='', extractions=extractions)
         greedy_replace(self, extractions, regions)
