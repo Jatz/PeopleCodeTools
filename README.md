@@ -22,4 +22,4 @@ This tool ONLY applies to PeopleSoft Trace Files that have a PeopleCode trace va
 
 ### Sublime Text Tidy PeopleCode Trace tool
 
-This tool will tidy up a trace file. At the moment all this tool does is add a matching quote to the end of certain lines that have an odd number of quotes. This tool ensures that the syntax highlighting of a PeopleCode trace file works correctly.
+This tool will tidy up a trace file. At the moment all this tool does is add a matching quote to the end of certain lines that have an odd number of quotes, ensuring that the syntax highlighting of the PeopleCode trace file works correctly.
