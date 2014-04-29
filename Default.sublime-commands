@@ -2,5 +2,10 @@
     {
         "caption": "PeopleCode Tools: Extract PeopleCode Call Stack",
         "command": "extractpccallstack"
+    },
+    {
+        "caption": "PeopleCode Tools: Tidy PeopleCode Trace",
+        "command": "tidypctrace"
     }
 ]
+
