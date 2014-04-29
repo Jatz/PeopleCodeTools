@@ -13,6 +13,11 @@ class TidypctraceCommand(sublime_plugin.TextCommand):
         lines = view.lines(alltextreg)
         allLines = ''
 
+        ## Remove header junk
+        extractions = []
+        regions = regex_findall(self, find='(^PSAPPSRV.*?\d\.\d{6}\s)(.*)', flags=0, replace='\\2', extractions=extractions)
+        greedy_replace(self, extractions, regions)
+
         ## Fix up unmatched quotes  
         extractions = []
         regions = regex_findall(self, find='(.*"[^";\)\s>]+$)', flags=0, replace='\\1"', extractions=extractions)
@@ -20,12 +25,7 @@ class TidypctraceCommand(sublime_plugin.TextCommand):
 
         extractions = []
         regions = regex_findall(self, find='(.*="$)', flags=0, replace='\\1"', extractions=extractions)
-        greedy_replace(self, extractions, regions)
-
-        ## Remove header junk
-        extractions = []
-        regions = regex_findall(self, find='(^PSAPPSRV.*?\d\.\d{6}\s)(.*)', flags=0, replace='\\2', extractions=extractions)
-        greedy_replace(self, extractions, regions)        
+        greedy_replace(self, extractions, regions)    
         
         ## Remove all blank spaces
         extractions = []
