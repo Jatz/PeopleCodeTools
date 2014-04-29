@@ -1,4 +1,4 @@
-import sublime, sublime_plugin
+import sublime, sublime_plugin, re
 from PeopleCodeTools.regex import regex_extract
 from PeopleCodeTools.regex import regex_findall
 from PeopleCodeTools.regex import greedy_replace
