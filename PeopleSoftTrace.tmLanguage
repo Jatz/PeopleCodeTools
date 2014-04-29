@@ -259,7 +259,7 @@
 			<array>
 				<dict>
 					<key>match</key>
-					<string>(method)\s+([\w]+)\(</string>
+					<string>(method)\s+([\w]+)\n</string>
 					<key>name</key>
 					<string>entity.name.function.pcode</string>
 				</dict>
@@ -421,12 +421,6 @@
 				<dict>
 					<key>match</key>
 					<string>(?&lt;=COM Stmt=)(.+)$</string>
-					<key>name</key>
-					<string>entity.name.function.tracesql</string>
-				</dict>
-				<dict>
-					<key>match</key>
-					<string>(?&lt;=GETSTMT Stmt=)[^,]+</string>
 					<key>name</key>
 					<string>entity.name.function.tracesql</string>
 				</dict>
