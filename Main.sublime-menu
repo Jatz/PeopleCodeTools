@@ -14,6 +14,17 @@
                         "command": "extractpccallstack"
                     }
                 ]
+            },
+            {
+                "id": "tidy",
+                "caption": "Tidy",
+                "children":
+                [
+                    {
+                        "caption": "Tidy PeopleCode Trace",
+                        "command": "tidypctrace"
+                    }
+                ]
             }
         ]
     }
