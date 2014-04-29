@@ -30,7 +30,6 @@ def regex_findall(self, find, flags, replace, extractions, literal=False, sel=No
     return regions
 
 def greedy_replace(self, replace, regions):
-    # Initialize replace
     replaced = 0
     count = len(regions) - 1
     for region in reversed(regions):
