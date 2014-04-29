@@ -13,6 +13,7 @@ The syntax highlighter applies to files with the following extensions:
 - tracesql (PeopleSoft Trace Files)
 - trc (PeopleSoft COBOL Trace Files)
 
+Note: This tool will not work so well on large files (i.e. files greater than 10 MB)
 
 ### Sublime Text Extract Call Stack tool
 
