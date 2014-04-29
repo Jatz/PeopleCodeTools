@@ -1,45 +1,9 @@
-import sublime, sublime_plugin, re
+import sublime, sublime_plugin
+from PeopleCodeTools.regex import regex_extract
+from PeopleCodeTools.regex import regex_findall
+from PeopleCodeTools.regex import greedy_replace
 
 class ExtractpccallstackCommand(sublime_plugin.TextCommand):
-
-    def regex_extract(self, find):
-        view = self.view
-        regions = view.sel()
-        alltextreg = sublime.Region(0, view.size())
-        callStackList = ''
-        lines = self.view.lines(alltextreg)
-        for line in lines:
-            lineContents = self.view.substr(line)            
-            match = re.search(find, lineContents)
-            if match:
-                callStackList = callStackList + match.group() + '\n'
-        self.view.replace(self.edit, alltextreg, callStackList)        
-
-    def regex_findall(self, find, flags, replace, extractions, literal=False, sel=None):
-        regions = []
-        offset = 0
-        if sel is not None:
-            offset = sel.begin()
-            bfr = self.view.substr(sublime.Region(offset, sel.end()))
-        else:
-            bfr = self.view.substr(sublime.Region(0, self.view.size()))
-        flags |= re.MULTILINE
-        if literal:
-            find = re.escape(find)
-        for m in re.compile(find, flags).finditer(bfr):
-            regions.append(sublime.Region(offset + m.start(0), offset + m.end(0)))
-            extractions.append(m.expand(replace))
-        return regions
-
-    def greedy_replace(self, replace, regions):
-        # Initialize replace
-        replaced = 0
-        count = len(regions) - 1
-        for region in reversed(regions):
-            replaced += 1
-            self.view.replace(self.edit, region, replace[count])
-            count -= 1
-        return replaced
     
     def run(self, edit):
         self.edit = edit
@@ -49,11 +13,11 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
         # For example: the following call method line will be ignored since there is a start-ext immediately after it:
         # PSAPPSRV.4556 (2426) 	 1-8760   14.05.07    0.000000       call method  SSF_CFS:SSF_CFQKey.SSFQKeyString #params=7
         # PSAPPSRV.4556 (2426) 	 1-8761   14.05.07    0.000000   >>> start-ext Nest=01 SSFQKeyString SSF_CFS.SSF_CFQKey.OnExecute
-        regions = self.regex_findall(find='(.*call method.*\n)(?=.*start-ext)', flags=0, replace='', extractions=extractions)
-        self.greedy_replace(extractions, regions)
+        regions = regex_findall(self, find='(.*call method.*\n)(?=.*start-ext)', flags=0, replace='', extractions=extractions)
+        greedy_replace(self, extractions, regions)
         
         # Extract all lines containing start, end, Nest=, call int, call private, call method and End-Function        
-        self.regex_extract(r'(((start|end).*Nest=.*)|(call (int|private|method).*)|End-Function.*)')
+        regex_extract(self, r'(((start|end).*Nest=.*)|(call (int|private|method).*)|End-Function.*)')
         
         view = self.view
         regions = view.sel()
@@ -109,12 +73,12 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
 
         # Clean lines
         # Remove the end-ext, End-Function and end calls, since we no longer need them after formatting
-        self.regex_extract(r'(.*(start).*Nest=.*)|.*(call (int|private|method).*)')
+        regex_extract(self, r'(.*(start).*Nest=.*)|.*(call (int|private|method).*)')
 
         # Remove unnecessary header junk (e.g. start, start-ext, Nest, etc.) 
-        regions = self.regex_findall(find='((start.*Nest=\d\d)|(call (int|private|method)))[\s]*', flags=0, replace='', extractions=extractions)
-        self.greedy_replace(extractions, regions)
+        regions = regex_findall(self, find='((start.*Nest=\d\d)|(call (int|private|method)))[\s]*', flags=0, replace='', extractions=extractions)
+        greedy_replace(self, extractions, regions)
 
         # Remove unnecessary trailer junk (e.g. params= or #params=)
-        regions = self.regex_findall(find='[\s]#?params=\d+', flags=0, replace='', extractions=extractions)
-        self.greedy_replace(extractions, regions) 
+        regions = regex_findall(self, find='[\s]#?params=\d+', flags=0, replace='', extractions=extractions)
+        greedy_replace(self, extractions, regions) 
