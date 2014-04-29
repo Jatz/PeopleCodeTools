@@ -1,4 +1,4 @@
-import sublime, sublime_plugin
+import sublime, sublime_plugin, re
 from PeopleCodeTools.regex import regex_extract
 from PeopleCodeTools.regex import regex_findall
 from PeopleCodeTools.regex import greedy_replace
@@ -15,6 +15,13 @@ class TidypctraceCommand(sublime_plugin.TextCommand):
         
         for line in lines:
             lineContents = view.substr(line)
+
+            ## Remove header timings
+            match = re.search(r'(^PSAPPSRV.*?\d\.\d{6}\s)(.*)', lineContents)
+            if match:
+                    lineContents = match.group(2)
+
+            ## Find unmatched quotes and add them
             quoteCount = 0
             for char in lineContents:
                 if char == '"':
@@ -29,10 +36,6 @@ class TidypctraceCommand(sublime_plugin.TextCommand):
 
         extractions = []
         
-        ## Remove header timings
-        regions = regex_findall(self, find='^PSAPPSRV.*?(\d\.\d{6})\s', flags=0, replace='', extractions=extractions)
-        greedy_replace(self, extractions, regions)
-
         ## Remove all blank spaces       
         regions = regex_findall(self, find='^\n', flags=0, replace='', extractions=extractions)
         greedy_replace(self, extractions, regions)
