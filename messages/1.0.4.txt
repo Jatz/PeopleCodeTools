@@ -1,0 +1,1 @@
+Restructured package to work with Package Control
