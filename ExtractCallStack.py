@@ -1,7 +1,7 @@
 import sublime, sublime_plugin, re
-from PeopleCodeTools.regex import regex_extract
-from PeopleCodeTools.regex import regex_findall
-from PeopleCodeTools.regex import greedy_replace
+from .libs.regex import regex_extract
+from .libs.regex import regex_findall
+from .libs.regex import greedy_replace
 
 class ExtractpccallstackCommand(sublime_plugin.TextCommand):
     
