@@ -1,28 +1,26 @@
 [
     {
-        "id": "selection",
-        "caption": "Selection",
+        "caption": "Preferences",
+        "mnemonic": "n",
+        "id": "preferences",
         "children":
         [
             {
-                "id": "extract",
-                "caption": "Extract",
+                "caption": "Package Settings",
+                "mnemonic": "P",
+                "id": "package-settings",
                 "children":
                 [
                     {
-                        "caption": "Extract PeopleCode Call Stack",
-                        "command": "extractpccallstack"
-                    }
-                ]
-            },
-            {
-                "id": "tidy",
-                "caption": "Tidy",
-                "children":
-                [
-                    {
-                        "caption": "Tidy PeopleCode Trace",
-                        "command": "tidypctrace"
+                        "caption": "PeopleCodeTools",
+                        "children":
+                        [
+                            {
+                                "command": "open_file",
+                                "args": {"file": "${packages}/PeopleCodeTools/PeopleCodeTools.sublime-settings"},
+                                "caption": "Settings"
+                            }
+                        ]
                     }
                 ]
             }
