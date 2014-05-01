@@ -1,0 +1,5 @@
+{
+    "tidy_add_unmatched_quotes": true,
+    "tidy_remove_psappsrv_headers": false,
+    "tidy_remove_blank_spaces": true
+}
