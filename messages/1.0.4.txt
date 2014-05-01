@@ -1,1 +1,2 @@
-Restructured package to work with Package Control
+1.0.4:
+- Restructured package to work with Package Control
