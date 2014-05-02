@@ -26,3 +26,10 @@ This tool ONLY applies to PeopleSoft Trace Files that have a PeopleCode trace va
 This tool will tidy up a tracesql file. At the moment this tool adds a matching quote to the end of certain lines that have an odd number of quotes, ensuring that the syntax highlighting of the PeopleCode trace file works correctly. The tool also removes the PSAPPSRV header text to make the trace file easier to read.
 
 Note: This tool will not work so well on large files (i.e. files greater than 8 MB), taking up to 60 seconds for 15 MB files.
+
+### Demonstration
+To see how this plugin can be used refer to the following:
+- <a href="http://www.jaymathew.com/?p=588" target="_blank">Using Syntax highlighting and the Tidy PeopleCode Trace tool</a>
+<br>
+- <a href="http://www.jaymathew.com/?p=18140" target="_blank">Using the Extract PeopleCode Call Stack tool</a>
+
