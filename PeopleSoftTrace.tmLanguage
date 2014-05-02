@@ -107,10 +107,6 @@
 				</dict>
 				<dict>
 					<key>include</key>
-					<string>#parens</string>
-				</dict>
-				<dict>
-					<key>include</key>
 					<string>#constants-and-special-vars</string>
 				</dict>
 				<dict>
