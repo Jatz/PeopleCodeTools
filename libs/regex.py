@@ -1,26 +1,26 @@
 import sublime, sublime_plugin, re
 
-def regex_extract(self, find):
-    view = self.view
+def regex_extract(self, view, find):
     regions = view.sel()
     alltextreg = sublime.Region(0, view.size())
     callStackList = ''
-    lines = self.view.lines(alltextreg)
+    lines = view.lines(alltextreg)
     for line in lines:
-        lineContents = self.view.substr(line)            
+        lineContents = view.substr(line)
         match = re.search(find, lineContents)
         if match:
             callStackList = callStackList + match.group() + '\n'
-    self.view.replace(self.edit, alltextreg, callStackList)        
+    view.replace(self.edit, alltextreg, callStackList)
 
-def regex_findall(self, find, flags, replace, extractions, literal=False, sel=None):
+
+def regex_findall(view, find, flags, replace, extractions, literal=False, sel=None):
     regions = []
     offset = 0
     if sel is not None:
         offset = sel.begin()
-        bfr = self.view.substr(sublime.Region(offset, sel.end()))
+        bfr = view.substr(sublime.Region(offset, sel.end()))
     else:
-        bfr = self.view.substr(sublime.Region(0, self.view.size()))
+        bfr = view.substr(sublime.Region(0, view.size()))
     flags |= re.MULTILINE
     if literal:
         find = re.escape(find)
@@ -29,11 +29,11 @@ def regex_findall(self, find, flags, replace, extractions, literal=False, sel=No
         extractions.append(m.expand(replace))
     return regions
 
-def greedy_replace(self, replace, regions):
+def greedy_replace(self, view, replace, regions):
     replaced = 0
     count = len(regions) - 1
     for region in reversed(regions):
         replaced += 1
-        self.view.replace(self.edit, region, replace[count])
+        view.replace(self.edit, region, replace[count])
         count -= 1
     return replaced
