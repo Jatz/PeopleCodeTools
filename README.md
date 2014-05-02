@@ -28,7 +28,7 @@ This tool will tidy up a tracesql file by performing the following operations:
 - Removing blank spaces (tidy_remove_blank_spaces)
 - Removing the PSAPPSRV header text to make the trace file easier to read (tidy_remove_psappsrv_headers).
 
-The tidy_remove_psappsrv_headers is disabled in the default settings. Feel free to set this to true in the user settingss for this plugin.
+The tidy_remove_psappsrv_headers is disabled in the default settings. Feel free to set this to true in the user settings for this plugin.
 
 Note: This tool will not work so well on large files (i.e. files greater than 8 MB), taking up to 60 seconds for 15 MB files.
 
