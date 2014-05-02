@@ -43,7 +43,12 @@ class TidypctraceCommand(sublime_plugin.TextCommand):
 
             extractions = []
             regions = regex_findall(newView, find='(.*="$)', flags=0, replace='\\1" - quote added by Tidy', extractions=extractions)
-            greedy_replace(self, newView, extractions, regions)    
+            greedy_replace(self, newView, extractions, regions)
+
+            extractions = []
+            regions = regex_findall(newView, find='(.*class="[^"\n]+$)', flags=0, replace='\\1" - quote added by Tidy', extractions=extractions)
+            greedy_replace(self, newView, extractions, regions)
+                
         
         ## Remove all blank spaces
         if settings.get("tidy_remove_blank_spaces") == True:
