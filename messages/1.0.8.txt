@@ -1,0 +1,2 @@
+1.0.8:
+- Modified results for tidy and extract call stack tools to show in a separate window so that the original trace file remains intact
