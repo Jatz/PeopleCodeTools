@@ -23,7 +23,12 @@ This tool ONLY applies to PeopleSoft Trace Files that have a PeopleCode trace va
 
 ### Sublime Text Tidy PeopleCode Trace tool
 
-This tool will tidy up a tracesql file. At the moment this tool adds a matching quote to the end of certain lines that have an odd number of quotes, ensuring that the syntax highlighting of the PeopleCode trace file works correctly. The tool also removes the PSAPPSRV header text to make the trace file easier to read.
+This tool will tidy up a tracesql file by performing the following operations:
+- Adding a matching quote to the end of certain lines that have an odd number of quotes, ensuring that the syntax highlighting of the PeopleCode trace file works correctly (tidy_add_unmatched_quotes). 
+- Removing blank spaces (tidy_remove_blank_spaces)
+- Removing the PSAPPSRV header text to make the trace file easier to read (tidy_remove_psappsrv_headers).
+
+The tidy_remove_psappsrv_headers is disabled in the default settings. Feel free to set this to true in the user settingss for this plugin.
 
 Note: This tool will not work so well on large files (i.e. files greater than 8 MB), taking up to 60 seconds for 15 MB files.
 
