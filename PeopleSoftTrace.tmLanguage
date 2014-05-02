@@ -329,20 +329,6 @@
 				</dict>
 			</array>
 		</dict>
-		<key>parens</key>
-		<dict>
-			<key>begin</key>
-			<string>\(</string>
-			<key>end</key>
-			<string>\)</string>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>include</key>
-					<string>#code</string>
-				</dict>
-			</array>
-		</dict>
 		<key>primitive-arrays</key>
 		<dict>
 			<key>patterns</key>
