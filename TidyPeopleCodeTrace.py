@@ -32,13 +32,14 @@ class TidypctraceCommand(sublime_plugin.TextCommand):
             greedy_replace(self, newView, extractions, regions)
 
         ## Fix up unmatched quotes
+        ## Note: 4 regex replaces still seems to be more efficient than adding a quote to lines with an odd number of quotes
         if settings.get("tidy_add_unmatched_quotes") == True:
             extractions = []
             regions = regex_findall(newView, find='(.*"[^";\)\s>]+$)', flags=0, replace='\\1" - quote added by Tidy', extractions=extractions)
             greedy_replace(self, newView, extractions, regions)
 
             extractions = []
-            regions = regex_findall(newView, find='(.*\("[^"]+$)', flags=0, replace='\\1" - quote added by Tidy', extractions=extractions)
+            regions = regex_findall(newView, find='(.*\("[^"\n]+$)', flags=0, replace='\\1" - quote added by Tidy', extractions=extractions)
             greedy_replace(self, newView, extractions, regions)
 
             extractions = []
@@ -48,8 +49,7 @@ class TidypctraceCommand(sublime_plugin.TextCommand):
             extractions = []
             regions = regex_findall(newView, find='(.*class="[^"\n]+$)', flags=0, replace='\\1" - quote added by Tidy', extractions=extractions)
             greedy_replace(self, newView, extractions, regions)
-                
-        
+
         ## Remove all blank spaces
         if settings.get("tidy_remove_blank_spaces") == True:
             extractions = []
