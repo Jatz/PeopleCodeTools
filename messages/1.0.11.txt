@@ -1,0 +1,2 @@
+1.0.11:
+- Fixed bug where functions would not display in the Goto Symbox window for PeopleCode Syntax
