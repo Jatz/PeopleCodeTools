@@ -107,51 +107,54 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
         regions = regex_findall(currentView, find='call (int|private|method)[\s]*', flags=0, replace='', extractions=extractions)
         greedy_replace(self, currentView, extractions, regions)
 
-        # Store remaining text line by line in a dict called results
-        alltextreg = sublime.Region(0, currentView.size())
-        lines = currentView.lines(alltextreg)
-        results = {}
-        lineNo = 1
-        for line in lines:
-            results[lineNo] = currentView.substr(line)
-            lineNo = lineNo + 1
+        # Are there any resume or reend statements?
+        regions = regex_findall(currentView, find='^(resume|reend)\s(.*)', flags=0, replace='', extractions=extractions)
+        if regions:
+            # Store remaining text line by line in a dict called results
+            alltextreg = sublime.Region(0, currentView.size())
+            lines = currentView.lines(alltextreg)
+            results = {}
+            lineNo = 1
+            for line in lines:
+                results[lineNo] = currentView.substr(line)
+                lineNo = lineNo + 1
 
-        resumeResults = {}
-        reendResults = {}
-        # Find resume and reend statements and store the line numbers in a dict along with the results
-        for lineNo, line in results.items():
-            match = re.search(r'^(resume|reend)\s(.*)', line)
-            if match:
-                if match.group(1) == 'resume':
-                    resumeResults[lineNo] = match.group(2)
-                else:
-                    reendResults[lineNo] = match.group(2)
-
-        # Add a tab to each line before resume until you reach an end for that event
-        for resumeResultLineNo, resumeResultLine in resumeResults.items():
-            for x in range(resumeResultLineNo,0, -1):
-                match = re.search(r'end\s+%s' % resumeResultLine, results[x])
+            resumeResults = {}
+            reendResults = {}
+            # Find resume and reend statements and store the line numbers in a dict along with the results
+            for lineNo, line in results.items():
+                match = re.search(r'^(resume|reend)\s(.*)', line)
                 if match:
-                    break;
-                else:
-                    if x != resumeResultLineNo:
-                        results[x] = '\t' + results[x]
+                    if match.group(1) == 'resume':
+                        resumeResults[lineNo] = match.group(2)
+                    else:
+                        reendResults[lineNo] = match.group(2)
 
-        # Add a tab to each line before reend until you reach a resume for that event
-        for reendResultLineNo, reendResultLine in reendResults.items():
-            for x in range(reendResultLineNo,0, -1):
-                match = re.search(r'resume\s+%s' % reendResultLine, results[x])
-                if match:
-                    break;
-                else:
-                    if x != reendResultLineNo:
-                        results[x] = '\t' + results[x]                        
+            # Add a tab to each line before resume until you reach an end for that event
+            for resumeResultLineNo, resumeResultLine in resumeResults.items():
+                for x in range(resumeResultLineNo,0, -1):
+                    match = re.search(r'end\s+%s' % resumeResultLine, results[x])
+                    if match:
+                        break;
+                    else:
+                        if x != resumeResultLineNo:
+                            results[x] = '\t' + results[x]
 
-        allLines = ''
-        for lineNo, line in results.items():
-            allLines = allLines + results[lineNo] + '\n'
-            
-        currentView.replace(edit, alltextreg, allLines)
+            # Add a tab to each line before reend until you reach a resume for that event
+            for reendResultLineNo, reendResultLine in reendResults.items():
+                for x in range(reendResultLineNo,0, -1):
+                    match = re.search(r'resume\s+%s' % reendResultLine, results[x])
+                    if match:
+                        break;
+                    else:
+                        if x != reendResultLineNo:
+                            results[x] = '\t' + results[x]                        
+
+            allLines = ''
+            for lineNo, line in results.items():
+                allLines = allLines + results[lineNo] + '\n'
+                
+            currentView.replace(edit, alltextreg, allLines)
 
         # Clean lines
         # Remove the end-ext, End-Function, resume, end and reend calls, since we no longer need them
