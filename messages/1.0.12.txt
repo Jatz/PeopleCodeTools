@@ -1,0 +1,2 @@
+1.0.12:
+- Extract Call Stack: Added support for resume and reend statements
