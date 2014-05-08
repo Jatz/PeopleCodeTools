@@ -37,7 +37,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
         # Get the unique session numbers            
         sessionNos = []
         regions = regex_findall(currentView, find='PSAPPSRV.\d+\s+\((\d+)\).*', flags=0, replace='\\1', extractions=sessionNos)
-        sessionNos = set(sessionNos)
+        sessionNos = sorted(set(sessionNos))
 
         extractBackup = currentView.substr(sublime.Region(0, currentView.size()))
 
