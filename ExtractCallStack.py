@@ -53,7 +53,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             lastCall = ''
             nestLevel = 0
         
-        
+            # Perform initial formatting based on Nest value
             for line in lines:
                 lineContents = currentView.substr(line)
                 # extract Nest value from lineContents
@@ -102,7 +102,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                 
             currentView.replace(edit, alltextreg, allLines)
 
-            # Remove unnecessary header junk (e.g. start, start-ext, Nest, etc.)
+            # Remove nest from the header
             extractions = []
             regions = regex_findall(currentView, find='(?<=(start)).*Nest=\d\d', flags=0, replace='', extractions=extractions)
             greedy_replace(self, currentView, extractions, regions)
@@ -119,9 +119,8 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             regions = regex_findall(currentView, find='(?<=(resume)).*Nest=\d\d\s\.', flags=0, replace='', extractions=extractions)
             greedy_replace(self, currentView, extractions, regions)   
 
-
-
             # Are there any resume or reend statements?
+            # If so, then reformat the entire trace based on the resume and reend statements
             extractions = []
             regions = regex_findall(currentView, find='^(resume|reend)\s(.*)', flags=0, replace='', extractions=extractions)
             if regions:
@@ -175,7 +174,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             # Remove the end-ext, End-Function, resume, end and reend calls, since we no longer need them
             regex_extract(self, currentView, r'(.*(start).*)|.*(call (int|private|method).*)')
 
-            # Remove start word from all lines as it is now superfluous
+            # Remove the start and call int/private/method strings from all lines as these strings are no longer required
             extractions = []
             regions = regex_findall(currentView, find='(start|call (int|private|method))\s+', flags=0, replace='', extractions=extractions)
             greedy_replace(self, currentView, extractions, regions)
@@ -200,6 +199,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                 newView.insert(edit, newViewAllTextRegion.end(), '\nSession %s:\n' % sessionNo + callStack)
             newView.sel().clear()
 
+            # Increment session count, go to next sessionNo if available
             sessionCount += 1
 
         # Restore the current view to its original contents
