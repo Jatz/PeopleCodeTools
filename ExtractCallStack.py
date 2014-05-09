@@ -119,9 +119,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             regions = regex_findall(currentView, find='(?<=(resume)).*Nest=\d\d\s\.', flags=0, replace='', extractions=extractions)
             greedy_replace(self, currentView, extractions, regions)   
 
-            extractions = []
-            regions = regex_findall(currentView, find='call (int|private|method)[\s]*', flags=0, replace='', extractions=extractions)
-            greedy_replace(self, currentView, extractions, regions)
+
 
             # Are there any resume or reend statements?
             extractions = []
@@ -179,7 +177,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
 
             # Remove start word from all lines as it is now superfluous
             extractions = []
-            regions = regex_findall(currentView, find='start\s+', flags=0, replace='', extractions=extractions)
+            regions = regex_findall(currentView, find='(start|call (int|private|method))\s+', flags=0, replace='', extractions=extractions)
             greedy_replace(self, currentView, extractions, regions)
 
             # Remove unnecessary trailer junk (e.g. params= or #params=)
