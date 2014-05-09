@@ -35,14 +35,17 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
 
         for sessionNo in sessionNos:
 
-            #regex_extract(self, workingView, r'PSAPPSRV.\d+\s+\((%s)\).*' % sessionNo)
+            # Extract only those lines relating to the sessionNo
             str_list = re.findall(r'PSAPPSRV\.\d+\s+\(%s\).*' % sessionNo, workingViewString, re.MULTILINE)
             sessionSpecificString = '\n'.join(str_list)
 
-            #regex_extract(self, workingView, r'(((start|end|resume|reend).*Nest=.*)|(call (int|private|method).*)|End-Function.*)')
+            # Remove header junk for each of the lines
             str_list = re.findall(r'(?:(?:(?:start|end|resume|reend).*Nest=.*)|(?:call (?:int|private|method).*)|End-Function.*)', sessionSpecificString, re.MULTILINE)
             sessionSpecificString = '\n'.join(str_list)
+            
+            # store lines in a list so that we can iterate through each line
             lines = sessionSpecificString.split('\n')
+            
             sessionSpecificString = ''                    
             lastCall = ''
             nestLevel = 0
