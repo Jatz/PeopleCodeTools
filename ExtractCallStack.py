@@ -32,7 +32,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
         sessionNos = sorted(set(sessionNos))
 
         sessionCount = 1
-        callStack = ''
+
         for sessionNo in sessionNos:
 
             #regex_extract(self, workingView, r'PSAPPSRV.\d+\s+\((%s)\).*' % sessionNo)
@@ -156,15 +156,13 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             sessionSpecificString = re.sub(r'Dur=.*', '', sessionSpecificString)
             sessionSpecificString = re.sub(r'[\s]#?params=\d+', '', sessionSpecificString)
 
-            # We now have the complete callstack for the session so store it in a string called callStack
-            callStack = sessionSpecificString
-
+            # We now have the complete callstack for the session
             # Insert the call stack in the new view
             workingViewAllTextRegion = sublime.Region(0, workingView.size())
             if sessionCount == 1:
-                workingView.insert(edit, workingViewAllTextRegion.end(), 'Session %s:\n' % sessionNo + callStack)
+                workingView.insert(edit, workingViewAllTextRegion.end(), 'Session %s:\n' % sessionNo + sessionSpecificString)
             else:
-                workingView.insert(edit, workingViewAllTextRegion.end(), '\nSession %s:\n' % sessionNo + callStack)
+                workingView.insert(edit, workingViewAllTextRegion.end(), '\nSession %s:\n' % sessionNo + sessionSpecificString)
             workingView.sel().clear()
 
             # Increment session count, go to next sessionNo if available
