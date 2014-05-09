@@ -1,0 +1,2 @@
+1.0.15:
+- Extract Call Stack: Completely rewrote tool to improve performance and stability
