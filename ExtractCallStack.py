@@ -2,7 +2,7 @@ import sublime, sublime_plugin, re
 
 class ExtractpccallstackCommand(sublime_plugin.TextCommand):
 
-    # This is only used for debugging
+    # This method is only used for debugging
     def replaceViewContent(self, viewToReplace, replaceString):
         viewToReplaceAllTextRegion = sublime.Region(0, viewToReplace.size())
         viewToReplace.replace(self.edit, viewToReplaceAllTextRegion, replaceString)
@@ -42,7 +42,12 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             # Remove header junk for each of the lines
             str_list = re.findall(r'(?:(?:(?:start|end|resume|reend).*Nest=.*)|(?:call (?:int|private|method).*)|End-Function.*)', sessionSpecificString, re.MULTILINE)
             sessionSpecificString = '\n'.join(str_list)
-            
+
+            # Get all the Nest values and store them in a list and store the lowest Nest value
+            nestNos = re.findall(r'Nest=(\d+)', workingViewString, re.MULTILINE)
+            nestNos = sorted(set(nestNos))
+            lowestNestValue = int(min(nestNos))
+                        
             # store lines in a list so that we can iterate through each line
             lines = sessionSpecificString.split('\n')
             
@@ -55,7 +60,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                 # extract Nest value from lineContents
                 match = re.search(r'(start|end|resume|reend).*Nest=(\d+)', lineContents)
                 if match:                                       
-                    nestLevel = int(match.group(2))
+                    nestLevel = int(match.group(2)) - lowestNestValue
                                         
                     startIndex = 0                               
                     
@@ -170,4 +175,3 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
 
             # Increment session count, go to next sessionNo if available
             sessionCount += 1
-        
