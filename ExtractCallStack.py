@@ -101,7 +101,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                     if lastCall == 'callInt':
                         nestLevel = nestLevel + 1
 
-            # Remove nest from the header
+            # Remove Nest from each line since we no longer need it
             sessionSpecificString = re.sub(r'\s+Nest=\d+', '', sessionSpecificString)
 
             # Are there any resume or reend statements?
