@@ -39,7 +39,7 @@ class TidypctraceCommand(sublime_plugin.TextCommand):
 
         ## Remove all blank spaces
         if settings.get("tidy_remove_blank_spaces") == True:
-            newViewString = re.sub(r'(?m)^\n', '', newViewString, re.MULTILINE)
+            newViewString = re.sub(r'(?m)^\n', '', newViewString)
 
         self.replaceViewContent(newView, newViewString)
 
