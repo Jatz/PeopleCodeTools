@@ -7,7 +7,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
         viewToReplaceAllTextRegion = sublime.Region(0, viewToReplace.size())
         viewToReplace.replace(self.edit, viewToReplaceAllTextRegion, replaceString)
         viewToReplace.sel().clear()
-        
+
     def run(self, edit):
         self.edit = edit
 
@@ -15,20 +15,20 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
         originalView = self.view;
 
         originalViewContent = originalView.substr(sublime.Region(0, originalView.size()))
-        workingView = originalView.window().new_file()             
-    
+        newView = originalView.window().new_file()
+
         # First remove all lines that have a call method followed by a start-ext, since the start-ext is sufficient
         # For example: the following call method line will be ignored since there is a start-ext immediately after it:
         # PSAPPSRV.4556 (2426)   1-8760   14.05.07    0.000000       call method  SSF_CFS:SSF_CFQKey.SSFQKeyString #params=7
         # PSAPPSRV.4556 (2426)   1-8761   14.05.07    0.000000   >>> start-ext Nest=01 SSFQKeyString SSF_CFS.SSF_CFQKey.OnExecute
-        workingViewString = re.sub(r'(.*call method.*\n)(?=.*start-ext)', '', originalViewContent)
-        
-        # Extract all lines containing start, end, Nest=, call int, call private, call method and End-Function        
-        str_list = re.findall(r'(?:(?:.*(?:start|end|resume|reend).*Nest=.*)|(?:.*call (?:int|private|method).*)|.*End-Function.*)', workingViewString, re.MULTILINE)
-        workingViewString = '\n'.join(str_list)
-        
+        newViewString = re.sub(r'(.*call method.*\n)(?=.*start-ext)', '', originalViewContent)
+
+        # Extract all lines containing start, end, Nest=, call int, call private, call method and End-Function
+        str_list = re.findall(r'(?:(?:.*(?:start|end|resume|reend).*Nest=.*)|(?:.*call (?:int|private|method).*)|.*End-Function.*)', newViewString, re.MULTILINE)
+        newViewString = '\n'.join(str_list)
+
         # Get the unique session numbers and store them in a list
-        sessionNos = re.findall(r'PSAPPSRV.\d+\s+\((\d+)\)', workingViewString, re.MULTILINE)
+        sessionNos = re.findall(r'PSAPPSRV.\d+\s+\((\d+)\)', newViewString, re.MULTILINE)
         sessionNos = sorted(set(sessionNos))
 
         sessionCount = 1
@@ -36,7 +36,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
         for sessionNo in sessionNos:
 
             # Extract only those lines relating to the sessionNo
-            str_list = re.findall(r'PSAPPSRV\.\d+\s+\(%s\).*' % sessionNo, workingViewString, re.MULTILINE)
+            str_list = re.findall(r'PSAPPSRV\.\d+\s+\(%s\).*' % sessionNo, newViewString, re.MULTILINE)
             sessionSpecificString = '\n'.join(str_list)
 
             # Remove header junk for each of the lines
@@ -44,29 +44,29 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             sessionSpecificString = '\n'.join(str_list)
 
             # Get all the Nest values and store them in a list and store the lowest Nest value
-            nestNos = re.findall(r'Nest=(\d+)', workingViewString, re.MULTILINE)
+            nestNos = re.findall(r'Nest=(\d+)', newViewString, re.MULTILINE)
             nestNos = sorted(set(nestNos))
             lowestNestValue = int(min(nestNos))
-                        
+
             # store lines in a list so that we can iterate through each line
             lines = sessionSpecificString.split('\n')
-            
-            sessionSpecificString = ''                    
+
+            sessionSpecificString = ''
             lastCall = ''
             nestLevel = 0
-        
+
             # Perform initial formatting based on Nest value
             for lineContents in lines:
                 # extract Nest value from lineContents
                 match = re.search(r'(start|end|resume|reend).*Nest=(\d+)', lineContents)
-                if match:                                       
+                if match:
                     nestLevel = int(match.group(2)) - lowestNestValue
-                                        
-                    startIndex = 0                               
-                    
+
+                    startIndex = 0
+
                     for x in range(startIndex,nestLevel):
                         lineContents = '\t' + lineContents
-                    sessionSpecificString = sessionSpecificString + lineContents + '\n'                    
+                    sessionSpecificString = sessionSpecificString + lineContents + '\n'
 
                     if match.group(1) == 'start':
                         lastCall = 'start'
@@ -76,20 +76,20 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                         lastCall = 'end'
                     if match.group(1) == 'reend':
                         lastCall = 'reend'
-                                             
+
                 else:
                     match = re.search(r'(call int|End-Function)', lineContents)
                     if match:
                         if match.group(1) == 'call int':
                             if (lastCall == 'start') | (lastCall == 'resume'):
                                 nestLevel= nestLevel + 1
-                            lastCall='callInt'    
-                        else:                      
+                            lastCall='callInt'
+                        else:
                             nestLevel = nestLevel - 1
                             lastCall='endFunction'
 
                     startIndex = 0
-                    
+
                     for x in range(startIndex,nestLevel):
                         lineContents = '\t' + lineContents
 
@@ -97,7 +97,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                         sessionSpecificString = sessionSpecificString + '\t' + lineContents + '\n'
                     else:
                         sessionSpecificString = sessionSpecificString + lineContents + '\n'
-                        
+
                     if lastCall == 'callInt':
                         nestLevel = nestLevel + 1
 
@@ -145,33 +145,33 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                             break;
                         else:
                             if x != reendResultLineNo:
-                                results[x] = '\t' + results[x]                        
+                                results[x] = '\t' + results[x]
 
                 sessionSpecificString = ''
                 for lineNo, line in results.items():
                     sessionSpecificString = sessionSpecificString + results[lineNo] + '\n'
-                                    
+
 
             # Clean lines
             # Remove the end-ext, End-Function, resume, end and reend calls, since we no longer need them
             str_list = re.findall(r'(?:.*(?:start).*)|.*(?:call (?:int|private|method).*)', sessionSpecificString, re.MULTILINE)
-            sessionSpecificString = '\n'.join(str_list)           
+            sessionSpecificString = '\n'.join(str_list)
 
             # Remove the start and call int/private/method strings from all lines as these strings are no longer required
             sessionSpecificString = re.sub(r'(start|call (int|private|method)|start-ext)\s+', '', sessionSpecificString)
-            
+
             # Remove unnecessary trailer junk (e.g. params= or #params=)
             sessionSpecificString = re.sub(r'Dur=.*', '', sessionSpecificString)
             sessionSpecificString = re.sub(r'[\s]#?params=\d+', '', sessionSpecificString)
 
             # We now have the complete callstack for the session
             # Insert the call stack in the new view
-            workingViewAllTextRegion = sublime.Region(0, workingView.size())
+            newViewAllTextRegion = sublime.Region(0, newView.size())
             if sessionCount == 1:
-                workingView.insert(edit, workingViewAllTextRegion.end(), 'Session %s:\n' % sessionNo + sessionSpecificString)
+                newView.insert(edit, newViewAllTextRegion.end(), 'Session %s:\n' % sessionNo + sessionSpecificString)
             else:
-                workingView.insert(edit, workingViewAllTextRegion.end(), '\nSession %s:\n' % sessionNo + sessionSpecificString)
-            workingView.sel().clear()
+                newView.insert(edit, newViewAllTextRegion.end(), '\n\nSession %s:\n' % sessionNo + sessionSpecificString)
+            newView.sel().clear()
 
             # Increment session count, go to next sessionNo if available
             sessionCount += 1
