@@ -1,61 +1,48 @@
 import sublime, sublime_plugin, re
-from .libs.regex import regex_extract
-from .libs.regex import regex_findall
-from .libs.regex import greedy_replace
 
 SETTINGS_FILE = "PeopleCodeTools.sublime-settings"
 
 class TidypctraceCommand(sublime_plugin.TextCommand):
-    
+
+    def replaceViewContent(self, viewToReplace, replaceString):
+        viewToReplaceAllTextRegion = sublime.Region(0, viewToReplace.size())
+        viewToReplace.replace(self.edit, viewToReplaceAllTextRegion, replaceString)
+        viewToReplace.sel().clear()
+
     def run(self, edit):
         settings = sublime.load_settings(SETTINGS_FILE)
         self.edit = edit
 
-        # Grab the current view contents and store it in a new file
-        currentView = self.view;
-        currentViewContent = currentView.substr(sublime.Region(0, currentView.size()))        
-        newView = currentView.window().new_file()
-        newViewAllTextRegion = sublime.Region(0, newView.size())
-        newView.replace(edit, newViewAllTextRegion, currentViewContent)
+        # Grab the original view contents and store it in a new file
+        originalView = self.view;
+        originalViewString = originalView.substr(sublime.Region(0, originalView.size()))
+
+        newView = originalView.window().new_file()
+        newViewString = originalViewString
 
         # Get location of syntax file
-        currentSyntax = currentView.settings().get('syntax')
+        originalSyntax = originalView.settings().get('syntax')
 
         ## Remove header junk
         if settings.get("tidy_remove_psappsrv_headers") == True:
-            extractions = []
-            regions = regex_findall(newView, find='(^PSAPPSRV.*?\d\.\d{6}\s)(.*)', flags=0, replace='\\2', extractions=extractions)
-            greedy_replace(self, newView, extractions, regions)
 
-            extractions = []
-            regions = regex_findall(newView, find='(^PSAPPSRV.*@JavaClient.*IntegrationSvc\]\(\d\)\s{3})(.*)', flags=0, replace='\\2', extractions=extractions)
-            greedy_replace(self, newView, extractions, regions)
+            newViewString = re.sub(r'(?m)(^PSAPPSRV.*?\d\.\d{6}\s)(.*)', '\\2', newViewString)
+            newViewString = re.sub(r'(?m)(^PSAPPSRV.*@JavaClient.*IntegrationSvc\]\(\d\)\s{3})(.*)', '\\2', newViewString)
 
         ## Fix up unmatched quotes
         ## Note: 4 regex replaces still seems to be more efficient than adding a quote to lines with an odd number of quotes
         if settings.get("tidy_add_unmatched_quotes") == True:
-            extractions = []
-            regions = regex_findall(newView, find='(.*"[^";\)\s>]+$)', flags=0, replace='\\1" - quote added by Tidy', extractions=extractions)
-            greedy_replace(self, newView, extractions, regions)
-
-            extractions = []
-            regions = regex_findall(newView, find='(.*\("[^"\n]+$)', flags=0, replace='\\1" - quote added by Tidy', extractions=extractions)
-            greedy_replace(self, newView, extractions, regions)
-
-            extractions = []
-            regions = regex_findall(newView, find='(.*="$)', flags=0, replace='\\1" - quote added by Tidy', extractions=extractions)
-            greedy_replace(self, newView, extractions, regions)
-
-            extractions = []
-            regions = regex_findall(newView, find='(.*class="[^"\n]+$)', flags=0, replace='\\1" - quote added by Tidy', extractions=extractions)
-            greedy_replace(self, newView, extractions, regions)
+            newViewString = re.sub(r'(?m)(.*"[^";\)\s>]+$)', '\\1" - quote added by Tidy', newViewString)
+            newViewString = re.sub(r'(?m)(.*\("[^"\n]+$)', '\\1" - quote added by Tidy', newViewString)
+            newViewString = re.sub(r'(?m)(.*=")$', '\\1" - quote added by Tidy', newViewString)
+            newViewString = re.sub(r'(?m)(.*class="[^"\n]+)$', '\\1" - quote added by Tidy', newViewString)
 
         ## Remove all blank spaces
         if settings.get("tidy_remove_blank_spaces") == True:
-            extractions = []
-            regions = regex_findall(newView, find='^\n', flags=0, replace='', extractions=extractions)
-            greedy_replace(self, newView, extractions, regions)
+            newViewString = re.sub(r'(?m)^\n', '', newViewString, re.MULTILINE)
 
-        # Set syntax of new file and clear current selection
-        newView.set_syntax_file(currentSyntax)
+        self.replaceViewContent(newView, newViewString)
+
+        # Set syntax of new file and clear original selection
+        newView.set_syntax_file(originalSyntax)
         newView.sel().clear()
