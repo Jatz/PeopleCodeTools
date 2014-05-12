@@ -61,10 +61,13 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             lastCall = ''
             nestLevel = 0
 
+            # extContext will store a list of contexts to keep track of all the start-ext calls
+            extContext = []
+
             # Perform initial formatting based on Nest value
             for lineContents in lines:
                 # extract Nest value from lineContents
-                match = re.search(r'(start|end|resume|reend).*Nest=(\d+)', lineContents)
+                match = re.search(r'(start-ext|start|end-ext|end|resume|reend).*Nest=(\d+)', lineContents)
                 if match:
                     nestLevel = int(match.group(2)) - lowestNestValue
 
@@ -76,23 +79,51 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
 
                     if match.group(1) == 'start':
                         lastCall = 'start'
+                        # PSAPPSRV.3320 (556)      1-32321  10.37.25    0.000000   >>> start     Nest=12  DERIVED_ADDR.ADDRESSLONG.RowInit
+                        matchExt = re.search(r'start.*Nest=(?:\d+).*?((?:\w+\.?)+)', lineContents)
+                        extContext.append(matchExt.group(1))
+                    if match.group(1) == 'start-ext':
+                        lastCall = 'start'
+                        # keep track of start-ext location so that we can append the location to call private and call int lines
+                        matchExt = re.search(r'start-ext.*Nest=(?:\d+).*\w+\s(.*)', lineContents)
+                        extContext.append(matchExt.group(1))
+                        #print('Added %s' % extContext[-1])
                     if  match.group(1) == 'resume':
                         lastCall = 'resume'
+                    if match.group(1) == 'end-ext':
+                        lastCall = 'end'
+                        # remove the last element from extContext
+                        #print('Removed %s' % extContext[-1])
+                        extContext.pop()
                     if match.group(1) == 'end':
                         lastCall = 'end'
                     if match.group(1) == 'reend':
                         lastCall = 'reend'
 
                 else:
-                    match = re.search(r'(call(?=\sint|setter)|call getter|End-Function|End-Get)', lineContents)
+                    match = re.search(r'(call (int|setter|getter|private)|End-Function|End-Get)', lineContents)
                     if match:
-                        if match.group(1) == 'call' or match.group(1) == 'call getter':
+                        # if first 4 chars are 'call'
+                        if match.group(1)[:4] == 'call':
 
-                            if (lastCall == 'start') | (lastCall == 'resume') | (lastCall == 'callGetter'):
+                            if (lastCall == 'start') or (lastCall == 'resume') or (lastCall == 'callGetter') or (lastCall == 'callPrivate'):
                                 nestLevel= nestLevel + 1
 
-                            if match.group(1) == 'callGetter':
+                            if match.group(1) == 'call getter':
                                 lastCall = 'callGetter'
+
+                            if match.group(1) == 'call private':
+                                lastCall = 'callPrivate'
+                                # Now we need to append the last value in extContext
+                                # i.e. extContext[-1]
+                                lineContents = re.sub(r'call private\s+(\w+)', r'call private \1 %s' % extContext[-1], lineContents)
+                            if match.group(1) == 'call int':
+                                lastCall = 'callInt'
+                                # Now we need to append the last value in extContext
+                                # i.e. extContext[-1]
+                                print(lineContents)
+                                #print(extContext[-1])
+                                lineContents = re.sub(r'call int\s+(\w+)', r'call int \1 %s' % extContext[-1], lineContents)
                             else:
                                 lastCall='call'
                         else:
@@ -112,7 +143,8 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                     else:
                         sessionSpecificString = sessionSpecificString + lineContents + '\n'
 
-                    if lastCall == 'call':
+                    # if any of the last calls start with 'call'
+                    if lastCall[:4] == 'call':
                         nestLevel = nestLevel + 1
 
                     if lastCall == 'endFunction':
@@ -180,7 +212,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             sessionSpecificString = re.sub(r'call getter\s+((?:\w+(?::?))+)\.(\w+)', r'call getter \2 \1.OnExecute', sessionSpecificString)
 
             # Remove the start and call int/private/method strings from all lines as these strings are no longer required
-            sessionSpecificString = re.sub(r'(start|call (int|private|method|getter)|start-ext)\s+', '', sessionSpecificString)
+            #sessionSpecificString = re.sub(r'(start|call (int|private|method|getter)|start-ext)\s+', '', sessionSpecificString)
 
             # Remove unnecessary trailer junk (e.g. params= or #params=)
             sessionSpecificString = re.sub(r'Dur=.*', '', sessionSpecificString)
@@ -188,6 +220,10 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
 
             # Replace any colons with dots
             sessionSpecificString = re.sub(':', r'.', sessionSpecificString)
+
+            # Find all functions (?<=\s)\w+(?=\n)
+            # Add their location
+
 
             # We now have the complete callstack for the session
             # Insert the call stack in the new view
