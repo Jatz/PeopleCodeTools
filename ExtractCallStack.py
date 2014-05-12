@@ -113,9 +113,9 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
 
                             if match.group(1) == 'call setter':
                                 lastCall = 'callSetter'
-                                # Remove extra space after call setter
+                                # Remove extra space after call setter and also rearrange setter so that it is at the start (like all other lines)
                                 # E.g. call setter  EO:CA:Address.EditPageHeader #params=3
-                                lineContents = re.sub(r'call setter\s+(\w+.*)', r'call setter \1', lineContents)
+                                lineContents = re.sub(r'call setter\s+((?:\w+:?)+)\.(\w+)', r'call setter \2 \1.OnExecute', lineContents)
                             if match.group(1) == 'call private':
                                 lastCall = 'callPrivate'
                                 # Now we need to append the last value in extContext (i.e. extContext[-1])
