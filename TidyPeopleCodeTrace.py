@@ -30,12 +30,21 @@ class TidypctraceCommand(sublime_plugin.TextCommand):
             newViewString = re.sub(r'(?m)(^PSAPPSRV.*@JavaClient.*IntegrationSvc\]\(\d\)\s{3})(.*)', '\\2', newViewString)
 
         ## Fix up unmatched quotes
-        ## Note: 4 regex replaces still seems to be more efficient than adding a quote to lines with an odd number of quotes
         if settings.get("tidy_add_unmatched_quotes") == True:
-            newViewString = re.sub(r'(?m)(.*"[^";\)\s>]+$)', '\\1" - quote added by Tidy', newViewString)
-            newViewString = re.sub(r'(?m)(.*\("[^"\n]+$)', '\\1" - quote added by Tidy', newViewString)
-            newViewString = re.sub(r'(?m)(.*=")$', '\\1" - quote added by Tidy', newViewString)
-            newViewString = re.sub(r'(?m)(.*class="[^"\n]+)$', '\\1" - quote added by Tidy', newViewString)
+
+            lines = newViewString.split('\n')
+            newViewString = ''
+
+            for line in lines:
+                quoteCount = 0
+                for char in line:
+                    if char == '"':
+                        quoteCount += 1
+
+                if (quoteCount % 2) != 0:
+                    line = line + '" - quote added by Tidy'
+
+                newViewString += line + '\n'
 
         ## Remove all blank spaces
         if settings.get("tidy_remove_blank_spaces") == True:
