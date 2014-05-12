@@ -61,7 +61,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             lastCall = ''
             nestLevel = 0
 
-            # extContext will store a list of contexts to keep track of all the start-ext calls
+            # extContext will store a list of contexts to keep track of all the start and start-ext calls
             extContext = []
 
             # Perform initial formatting based on Nest value
@@ -96,6 +96,8 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                         extContext.pop()
                     if match.group(1) == 'end':
                         lastCall = 'end'
+                        # remove the last element from extContext
+                        extContext.pop()                        
                     if match.group(1) == 'reend':
                         lastCall = 'reend'
 
