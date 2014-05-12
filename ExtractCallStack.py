@@ -17,14 +17,20 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
         originalViewContent = originalView.substr(sublime.Region(0, originalView.size()))
         newView = originalView.window().new_file()
 
-        # First remove all lines that have a call method followed by a start-ext, since the start-ext is sufficient
+        # First remove all lines that have a call method, call getter, or call setter followed by a start-ext, since the start-ext is sufficient
         # For example: the following call method line will be ignored since there is a start-ext immediately after it:
         # PSAPPSRV.4556 (2426)   1-8760   14.05.07    0.000000       call method  SSF_CFS:SSF_CFQKey.SSFQKeyString #params=7
         # PSAPPSRV.4556 (2426)   1-8761   14.05.07    0.000000   >>> start-ext Nest=01 SSFQKeyString SSF_CFS.SSF_CFQKey.OnExecute
-        newViewString = re.sub(r'(.*call method.*\n)(?=.*start-ext)', '', originalViewContent)
+        newViewString = re.sub(r'(.*call (getter|setter|method).*\n)(?=.*>>>\sstart-ext)', '', originalViewContent)
+
+        # Add an end-get for relevant lines
+        # I.e. Find all internal call getters and add end-gets. This is done by matching line number before the call getter and after the getter method has finished
+        # Note: This is really ugly, but I couldn't find a better way to do this. Plus it's all done in one line of code
+        newViewString = re.sub(r'(\d+:.*)(\n.*call getter\s+(?:\w+:?)+\.\w+[\s\S]*?)(.*)(\1)', r'\1\2\3End-Get;', newViewString)
 
         # Extract all lines containing start, end, Nest=, call int, call private, call method and End-Function
-        str_list = re.findall(r'(?:(?:.*(?:start|end|resume|reend).*Nest=.*)|(?:.*call (?:int|private|method).*)|.*End-Function.*)', newViewString, re.MULTILINE)
+        # Note: we ignore call constructor and call setter
+        str_list = re.findall(r'(?:(?:.*(?:start|end|resume|reend).*Nest=.*)|(?:.*call (?:int|private|method|getter).*)|.*End-Function.*|.*End-Get.*)', newViewString, re.MULTILINE)
         newViewString = '\n'.join(str_list)
 
         # Get the unique session numbers and store them in a list
@@ -40,7 +46,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             sessionSpecificString = '\n'.join(str_list)
 
             # Remove header junk for each of the lines
-            str_list = re.findall(r'(?:(?:(?:start|end|resume|reend).*Nest=.*)|(?:call (?:int|private|method).*)|End-Function.*)', sessionSpecificString, re.MULTILINE)
+            str_list = re.findall(r'(?:(?:(?:start|end|resume|reend).*Nest=.*)|(?:call (?:int|private|method|getter).*)|End-Function.*|End-Get.*)', sessionSpecificString, re.MULTILINE)
             sessionSpecificString = '\n'.join(str_list)
 
             # Get all the Nest values and store them in a list and store the lowest Nest value
@@ -78,15 +84,23 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                         lastCall = 'reend'
 
                 else:
-                    match = re.search(r'(call int|End-Function)', lineContents)
+                    match = re.search(r'(call(?=\sint|setter)|call getter|End-Function|End-Get)', lineContents)
                     if match:
-                        if match.group(1) == 'call int':
-                            if (lastCall == 'start') | (lastCall == 'resume'):
+                        if match.group(1) == 'call' or match.group(1) == 'call getter':
+
+                            if (lastCall == 'start') | (lastCall == 'resume') | (lastCall == 'callGetter'):
                                 nestLevel= nestLevel + 1
-                            lastCall='callInt'
+
+                            if match.group(1) == 'callGetter':
+                                lastCall = 'callGetter'
+                            else:
+                                lastCall='call'
                         else:
-                            nestLevel = nestLevel - 1
-                            lastCall='endFunction'
+                            if lastCall == 'endFunction':
+                                lastCall ='endFunction'
+                            else:
+                                # End-Get reached
+                                lastCall = 'endGet'
 
                     startIndex = 0
 
@@ -98,8 +112,14 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                     else:
                         sessionSpecificString = sessionSpecificString + lineContents + '\n'
 
-                    if lastCall == 'callInt':
+                    if lastCall == 'call':
                         nestLevel = nestLevel + 1
+
+                    if lastCall == 'endFunction':
+                        nestLevel = nestLevel - 1
+
+                    if lastCall == 'endGet':
+                        nestLevel = nestLevel - 1
 
             # Remove Nest from each line since we no longer need it
             sessionSpecificString = re.sub(r'\s+Nest=\d+', '', sessionSpecificString)
@@ -151,18 +171,23 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                 for lineNo, line in results.items():
                     sessionSpecificString = sessionSpecificString + results[lineNo] + '\n'
 
-
             # Clean lines
             # Remove the end-ext, End-Function, resume, end and reend calls, since we no longer need them
-            str_list = re.findall(r'(?:.*(?:start).*)|.*(?:call (?:int|private|method).*)', sessionSpecificString, re.MULTILINE)
+            str_list = re.findall(r'(?:.*(?:start).*)|.*(?:call (?:int|private|method|getter).*)', sessionSpecificString, re.MULTILINE)
             sessionSpecificString = '\n'.join(str_list)
 
+            # Rearrange the call getter so that it is in the same format as all the other calls
+            sessionSpecificString = re.sub(r'call getter\s+((?:\w+(?::?))+)\.(\w+)', r'call getter \2 \1.OnExecute', sessionSpecificString)
+
             # Remove the start and call int/private/method strings from all lines as these strings are no longer required
-            sessionSpecificString = re.sub(r'(start|call (int|private|method)|start-ext)\s+', '', sessionSpecificString)
+            sessionSpecificString = re.sub(r'(start|call (int|private|method|getter)|start-ext)\s+', '', sessionSpecificString)
 
             # Remove unnecessary trailer junk (e.g. params= or #params=)
             sessionSpecificString = re.sub(r'Dur=.*', '', sessionSpecificString)
             sessionSpecificString = re.sub(r'[\s]#?params=\d+', '', sessionSpecificString)
+
+            # Replace any colons with dots
+            sessionSpecificString = re.sub(':', r'.', sessionSpecificString)
 
             # We now have the complete callstack for the session
             # Insert the call stack in the new view
