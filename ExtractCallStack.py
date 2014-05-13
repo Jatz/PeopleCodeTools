@@ -205,8 +205,6 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                 for lineNo, line in results.items():
                     sessionSpecificString = sessionSpecificString + results[lineNo] + '\n'
 
-            self.replaceViewContent(newView, sessionSpecificString)
-
             # Clean lines
             # Remove the end-ext, End-Function, resume, end and reend calls, since we no longer need them
             str_list = re.findall(r'(?:.*(?:start).*)|.*(?:call (?:int|private|method|getter|setter).*)', sessionSpecificString, re.MULTILINE)
