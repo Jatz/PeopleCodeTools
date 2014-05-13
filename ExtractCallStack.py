@@ -97,7 +97,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                     if match.group(1) == 'end':
                         lastCall = 'end'
                         # remove the last element from extContext
-                        extContext.pop()                        
+                        extContext.pop()
                     if match.group(1) == 'reend':
                         lastCall = 'reend'
 
@@ -174,7 +174,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                 reendResults = {}
                 # Find resume and reend statements and store the line numbers in a dict along with the results
                 for lineNo, line in results.items():
-                    match = re.search(r'^(resume|reend)\s(.*)', line)
+                    match = re.search(r'^(resume|reend)\s.*?((?:\w+\.?)+)', line)
                     if match:
                         if match.group(1) == 'resume':
                             resumeResults[lineNo] = match.group(2)
@@ -194,7 +194,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                 # Add a tab to each line before reend until you reach a resume for that event
                 for reendResultLineNo, reendResultLine in reendResults.items():
                     for x in range(reendResultLineNo,0, -1):
-                        match = re.search(r'resume\s+%s' % reendResultLine, results[x])
+                        match = re.search(r'resume\s.*?%s' % reendResultLine, results[x])
                         if match:
                             break;
                         else:
@@ -205,6 +205,8 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                 for lineNo, line in results.items():
                     sessionSpecificString = sessionSpecificString + results[lineNo] + '\n'
 
+            self.replaceViewContent(newView, sessionSpecificString)
+
             # Clean lines
             # Remove the end-ext, End-Function, resume, end and reend calls, since we no longer need them
             str_list = re.findall(r'(?:.*(?:start).*)|.*(?:call (?:int|private|method|getter|setter).*)', sessionSpecificString, re.MULTILINE)
@@ -213,7 +215,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             # Rearrange the call getter so that it is in the same format as all the other calls
             sessionSpecificString = re.sub(r'call getter\s+((?:\w+(?::?))+)\.(\w+)', r'call getter \2 \1.OnExecute', sessionSpecificString)
 
-            # Remove the start and call int/private/method strings from all lines as these strings are no longer required
+            # For now we'll keep the start and call int/private/method strings from all lines to be make these lines clearer
             #sessionSpecificString = re.sub(r'(start|call (int|private|method|getter|setter)|start-ext)\s+', '', sessionSpecificString)
 
             # Remove unnecessary trailer junk (e.g. params= or #params=)
