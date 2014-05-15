@@ -63,13 +63,14 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
 
             # extContext will store a list of contexts to keep track of all the start and start-ext calls
             extContext = []
+            nestLevelOffset = 0
 
             # Perform initial formatting based on Nest value
             for lineContents in lines:
                 # extract Nest value from lineContents
                 match = re.search(r'(start-ext|start|end-ext|end|resume|reend).*Nest=(\d+)', lineContents)
                 if match:
-                    nestLevel = int(match.group(2)) - lowestNestValue
+                    nestLevel = nestLevelOffset + int(match.group(2)) - lowestNestValue
 
                     startIndex = 0
 
@@ -107,8 +108,10 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                         # if first 4 chars are 'call'
                         if match.group(1)[:4] == 'call':
 
+                            lastCall='call'
+
                             if lastCall in ['start', 'resume'] or (lastCall[:4] == 'call'):
-                                nestLevel = nestLevel + 1
+                                nestLevel += 1
 
                             if match.group(1) == 'call getter':
                                 lastCall = 'callGetter'
@@ -126,8 +129,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                                 lastCall = 'callInt'
                                 # Now we need to append the last value in extContext (i.e. extContext[-1])
                                 lineContents = re.sub(r'call int\s+(\w+)', r'call int \1 %s' % extContext[-1], lineContents)
-                            else:
-                                lastCall='call'
+
                         else:
                             if match.group(1) == 'End-Function':
                                 lastCall ='endFunction'
@@ -140,7 +142,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
 
                     startIndex = 0
 
-                    for x in range(startIndex,nestLevel):
+                    for x in range(startIndex,nestLevel + nestLevelOffset):
                         lineContents = '\t' + lineContents
 
                     if lastCall == 'start':
@@ -158,10 +160,17 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             # Remove Nest from each line since we no longer need it
             sessionSpecificString = re.sub(r'\s+Nest=\d+', '', sessionSpecificString)
 
+            # Remove unnecessary trailer junk (e.g. params= or #params=)
+            sessionSpecificString = re.sub(r'Dur=.*', '', sessionSpecificString)
+            sessionSpecificString = re.sub(r'[\s]#?params=\d+', '', sessionSpecificString)
+
             # Are there any resume or reend statements?
             # If so, then reformat the session specific string based on the resume and reend statements
             found = re.search('(resume|reend)\s(.*)', sessionSpecificString)
             if found:
+                # first remove any dots straight after the resume/reend (if there are any)
+                sessionSpecificString = re.sub(r'(resume|reend)\s+\.\s+(.*)', r'\1 \2', sessionSpecificString)
+
                 # Store remaining text line by line in a dict called results
                 lines = sessionSpecificString.split('\n')
                 results = {}
@@ -172,24 +181,29 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
 
                 resumeResults = {}
                 reendResults = {}
+                endResults = {}
                 # Find resume and reend statements and store the line numbers in a dict along with the results
                 for lineNo, line in results.items():
-                    match = re.search(r'^(resume|reend)\s.*?((?:\w+\.?)+)', line)
+                    match = re.search(r'(resume|reend|end)\s.*?((?:\w+\.?)+((?:\s(?:\w+\.?)+)?))', line)
                     if match:
                         if match.group(1) == 'resume':
                             resumeResults[lineNo] = match.group(2)
-                        else:
+                        if match.group(1) == 'reend':
                             reendResults[lineNo] = match.group(2)
+                        if match.group(1) == 'end':
+                            endResults[lineNo] = match.group(2)
 
                 # Add a tab to each line before resume until you reach an end for that event
                 for resumeResultLineNo, resumeResultLine in resumeResults.items():
-                    for x in range(resumeResultLineNo,0, -1):
-                        match = re.search(r'end\s+%s' % resumeResultLine, results[x])
-                        if match:
-                            break;
-                        else:
-                            if x != resumeResultLineNo:
-                                results[x] = '\t' + results[x]
+                    # If there is actually an end within the same session, then format all lines after the end and before the resume
+                    if resumeResultLine in endResults.values():
+                        for x in range(resumeResultLineNo,0, -1):
+                            match = re.search(r'end\s+%s' % resumeResultLine, results[x])
+                            if match:
+                                break;
+                            else:
+                                if x != resumeResultLineNo:
+                                    results[x] = '\t' + results[x]
 
                 # Add a tab to each line before reend until you reach a resume for that event
                 for reendResultLineNo, reendResultLine in reendResults.items():
@@ -201,13 +215,17 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                             if x != reendResultLineNo:
                                 results[x] = '\t' + results[x]
 
+                # store results in sessionSpecificString
                 sessionSpecificString = ''
                 for lineNo, line in results.items():
                     sessionSpecificString = sessionSpecificString + results[lineNo] + '\n'
 
+                # if there is a resume within a resume there might be two tabs, so just replace the two tabs with one tab
+                sessionSpecificString = re.sub(r'\t\t', '\t', sessionSpecificString)
+
             # Clean lines
-            # Remove the end-ext, End-Function, resume, end and reend calls, since we no longer need them
-            str_list = re.findall(r'(?:.*(?:start).*)|.*(?:call (?:int|private|method|getter|setter).*)', sessionSpecificString, re.MULTILINE)
+            # Remove the end-ext, End-Function, end and reend calls, since we no longer need them
+            str_list = re.findall(r'(?:.*(?:start|resume).*)|.*(?:call (?:int|private|method|getter|setter).*)', sessionSpecificString, re.MULTILINE)
             sessionSpecificString = '\n'.join(str_list)
 
             # Rearrange the call getter so that it is in the same format as all the other calls
@@ -215,10 +233,6 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
 
             # For now we'll keep the start and call int/private/method strings from all lines to be make these lines clearer
             #sessionSpecificString = re.sub(r'(start|call (int|private|method|getter|setter)|start-ext)\s+', '', sessionSpecificString)
-
-            # Remove unnecessary trailer junk (e.g. params= or #params=)
-            sessionSpecificString = re.sub(r'Dur=.*', '', sessionSpecificString)
-            sessionSpecificString = re.sub(r'[\s]#?params=\d+', '', sessionSpecificString)
 
             # Replace any colons with dots
             sessionSpecificString = re.sub(':', r'.', sessionSpecificString)
