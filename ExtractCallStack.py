@@ -63,14 +63,13 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
 
             # extContext will store a list of contexts to keep track of all the start and start-ext calls
             extContext = []
-            nestLevelOffset = 0
 
             # Perform initial formatting based on Nest value
             for lineContents in lines:
                 # extract Nest value from lineContents
                 match = re.search(r'(start-ext|start|end-ext|end|resume|reend).*Nest=(\d+)', lineContents)
                 if match:
-                    nestLevel = nestLevelOffset + int(match.group(2)) - lowestNestValue
+                    nestLevel = int(match.group(2)) - lowestNestValue
 
                     startIndex = 0
 
@@ -142,7 +141,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
 
                     startIndex = 0
 
-                    for x in range(startIndex,nestLevel + nestLevelOffset):
+                    for x in range(startIndex,nestLevel):
                         lineContents = '\t' + lineContents
 
                     if lastCall == 'start':
