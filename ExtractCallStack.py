@@ -252,6 +252,9 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             # Prefix all remaining calls with call function
             sessionSpecificString = re.sub(r'(?m)call\s(?!(?:method|getter|setter))(.*(?!\.OnExecute))$', r'call function \1', sessionSpecificString)
 
+            # Rename eligible call methods to call constructors
+            sessionSpecificString = re.sub(r'(?m)call\smethod\s+((\w+).*(?:\2)\.OnExecute$)', r'call constructor \1', sessionSpecificString)
+
             # We now have the complete callstack for the session
             # Insert the call stack in the new view
             newViewAllTextRegion = sublime.Region(0, newView.size())

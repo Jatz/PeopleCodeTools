@@ -68,7 +68,7 @@
 			<array>
 				<dict>
 					<key>begin</key>
-					<string>(call (?:method|function|getter|setter))\s+?(.*)</string>
+					<string>(call (?:method|function|getter|setter|constructor))\s+?(.*)</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
