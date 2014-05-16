@@ -19,7 +19,13 @@ __Note:__ The syntax highlighting plugin slows the opening time for very large f
 
 This tool will extract and format the call stack from a PeopleSoft trace file.
 
-This tool ONLY applies to PeopleSoft Trace Files that have a PeopleCode trace value between 2496 and 4044. Trace files that have not been generated using these trace flags will not produce enough information for the tool to format the call stack. To use the tool, open a .tracesql file in Sublime Text and then run the "PeopleCode Tools: Extract PeopleCode Call Stack" command from the command palette.
+This tool ONLY applies to PeopleSoft Trace Files that have the following PeopleCode trace flags:
+- Program Starts (64)
+- External function calls (128)
+- Internal function calls (256)
+- Each statement (2048)
+
+Trace files that have not been generated using these trace flags will not produce enough information for the tool to format the call stack. To use the tool, open a .tracesql file in Sublime Text and then run the "PeopleCode Tools: Extract PeopleCode Call Stack" command from the command palette.
 
 ### Sublime Text Tidy PeopleCode Trace tool
 
