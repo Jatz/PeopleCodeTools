@@ -13,7 +13,7 @@ The syntax highlighter applies to files with the following extensions:
 - tracesql (PeopleSoft Trace Files)
 - trc (PeopleSoft COBOL Trace Files)
 
-Note: The syntax highlighting plugin slows the opening time for very large files (i.e. 50 MB or greater) due to the fact that the plugin uses regular expressions to create scopes. If you are using the BracketHighlighter plugin on large PeopleCode files, you’ll need to disable it by running ‘BracketHighlighter: Toggle Global Enable’ from the command line. If not, Sublime will behave very sluggishly for these files. Also, it is recommended that the ‘Highlight matches’ option be disabled when searching large files. If ‘Highlight matches’ is not disabled, the search will try to instantly match every single character you type.
+__Note:__ The syntax highlighting plugin slows the opening time for very large files (i.e. 50 MB or greater) due to the fact that the plugin uses regular expressions to create scopes. If you are using the BracketHighlighter plugin on large PeopleCode files, you’ll need to disable it by running ‘BracketHighlighter: Toggle Global Enable’ from the command line. If not, Sublime will behave very sluggishly for these files. Also, it is recommended that the ‘Highlight matches’ option be disabled when searching large files. If ‘Highlight matches’ is not disabled, the search will try to instantly match every single character you type.
 
 ### Sublime Text Extract Call Stack tool
 
@@ -28,7 +28,7 @@ This tool will tidy up a tracesql file by performing the following operations:
 - Removing blank spaces (tidy_remove_blank_spaces)
 - Removing the PSAPPSRV header text to make the trace file easier to read (tidy_remove_psappsrv_headers). This option is disabled by default. Feel free to set this to true in the user settings for this plugin if you desire this functionality.
 
-Note: This tool may take a while to run on large files (i.e. files greater than 8 MB).
+__Note:__ This tool may take a while to run on large files (i.e. files greater than 8 MB).
 
 ### Demonstration
 To see how this plugin can be used refer to the following:
