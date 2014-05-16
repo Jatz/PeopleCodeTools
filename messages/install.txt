@@ -13,16 +13,25 @@ The syntax highlighter applies to files with the following extensions:
 - tracesql (PeopleSoft Trace Files)
 - trc (PeopleSoft COBOL Trace Files)
 
-Note: This tool will not work so well on large files (i.e. files greater than 8 MB)
+__Note:__ The syntax highlighting plugin slows the opening time for very large files (i.e. 50 MB or greater) due to the fact that the plugin uses regular expressions to create scopes. If you are using the BracketHighlighter plugin on large PeopleCode files, you’ll need to disable it by running ‘BracketHighlighter: Toggle Global Enable’ from the command line. If not, Sublime will behave very sluggishly for these files. Also, it is recommended that the ‘Highlight matches’ option be disabled when searching large files. If ‘Highlight matches’ is not disabled, the search will try to instantly match every single character you type.
 
 ### Sublime Text Extract Call Stack tool
 
-This tool will extract and format the call stack from a PeopleSoft trace file with a 4044 PeopleCode trace.
+This tool will extract and format the call stack from a PeopleSoft trace file.
 
-This tool ONLY applies to PeopleSoft Trace Files that have a PeopleCode trace value of 4044. Trace files that haven't been generated using the 4044 trace flags will not produce enough information for the tool to format the call stack. To use the tool, open a .tracesql file in Sublime Text and then run the "PeopleCode Tools: Extract PeopleCode Call Stack" command from the command palette.
+This tool ONLY applies to PeopleSoft Trace Files that have the following PeopleCode trace flags:
+- Program Starts (64)
+- External function calls (128)
+- Internal function calls (256)
+- Each statement (2048)
+
+Trace files that have not been generated using these trace flags will not produce enough information for the tool to format the call stack. To use the tool, open a .tracesql file in Sublime Text and then run the "PeopleCode Tools: Extract PeopleCode Call Stack" command from the command palette.
 
 ### Sublime Text Tidy PeopleCode Trace tool
 
-This tool will tidy up a tracesql file. At the moment this tool adds a matching quote to the end of certain lines that have an odd number of quotes, ensuring that the syntax highlighting of the PeopleCode trace file works correctly. The tool also removes the PSAPPSRV header text to make the trace file easier to read.
+This tool will tidy up a tracesql file by performing the following operations:
+- Adding a matching quote to the end of certain lines that have an odd number of quotes, ensuring that the syntax highlighting of the PeopleCode trace file works correctly (tidy_add_unmatched_quotes). 
+- Removing blank spaces (tidy_remove_blank_spaces)
+- Removing the PSAPPSRV header text to make the trace file easier to read (tidy_remove_psappsrv_headers). This option is disabled by default. Feel free to set this to true in the user settings for this plugin if you desire this functionality.
 
-Note: This tool will not work so well on large files (i.e. files greater than 8 MB), taking up to 60 seconds for 15 MB files.
+__Note:__ This tool may take a while to run on large files (i.e. files greater than 8 MB).
