@@ -245,7 +245,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             sessionSpecificString = re.sub(r'(?m)(?m)call\smethod\s+(\w+)(\s.*\1.OnExecute)', r'call constructor \1\2', sessionSpecificString)
 
             # Rename to call function those start-ext calls that do not have getters, setters or constructors appended
-            sessionSpecificString = re.sub(r'(?m)start-ext\s(\w+)(\s\w+\.\w+\.\w+)$', r'call function \1 \2', sessionSpecificString)
+            sessionSpecificString = re.sub(r'(?m)start-ext\s(\w+)\s(\w+\.\w+\.\w+)$', r'call function \1 \2', sessionSpecificString)
 
             # Replace any remaining start-ext with calls based on the last word in the line
             # e.g. start-ext isSaveWarning PT_NAV2.NavOptions.OnExecute getter
