@@ -13,17 +13,13 @@ The syntax highlighter applies to files with the following extensions:
 - tracesql (PeopleSoft Trace Files)
 - trc (PeopleSoft COBOL Trace Files)
 
-Note: The syntax highlighting plugin slows the opening time for very large files (i.e. 50 MB or greater) due to the fact that the plugin uses regular expressions to create scopes.
-
-Also, it is recommended that the ‘Highlight matches’ option be disabled when searching large files. If ‘Highlight matches’ is not disabled, the search will try to instantly match every single character you type.
-
-Finally, if you are using the BracketHighlighter plugin, you’ll need to disable it by running ‘BracketHighlighter: Toggle Global Enable’ from the command line. If not, Sublime will behave very sluggishly.
+Note: The syntax highlighting plugin slows the opening time for very large files (i.e. 50 MB or greater) due to the fact that the plugin uses regular expressions to create scopes. If you are using the BracketHighlighter plugin on large PeopleCode files, you’ll need to disable it by running ‘BracketHighlighter: Toggle Global Enable’ from the command line. If not, Sublime will behave very sluggishly for these files. Also, it is recommended that the ‘Highlight matches’ option be disabled when searching large files. If ‘Highlight matches’ is not disabled, the search will try to instantly match every single character you type.
 
 ### Sublime Text Extract Call Stack tool
 
 This tool will extract and format the call stack from a PeopleSoft trace file.
 
-This tool ONLY applies to PeopleSoft Trace Files that have a PeopleCode trace value between 2496 and 4044. Trace files that haven't been generated using these trace flags will not produce enough information for the tool to format the call stack. To use the tool, open a .tracesql file in Sublime Text and then run the "PeopleCode Tools: Extract PeopleCode Call Stack" command from the command palette.
+This tool ONLY applies to PeopleSoft Trace Files that have a PeopleCode trace value between 2496 and 4044. Trace files that have not been generated using these trace flags will not produce enough information for the tool to format the call stack. To use the tool, open a .tracesql file in Sublime Text and then run the "PeopleCode Tools: Extract PeopleCode Call Stack" command from the command palette.
 
 ### Sublime Text Tidy PeopleCode Trace tool
 
