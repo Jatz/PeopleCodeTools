@@ -13,7 +13,11 @@ The syntax highlighter applies to files with the following extensions:
 - tracesql (PeopleSoft Trace Files)
 - trc (PeopleSoft COBOL Trace Files)
 
-Note: This tool will not work so well on large files (i.e. files greater than 8 MB)
+Note: The syntax highlighting plugin slows the opening time for very large files (i.e. 50 MB or greater) due to the fact that the plugin uses regular expressions to create scopes.
+
+Also, it is recommended that the ‘Highlight matches’ option be disabled when searching large files. If ‘Highlight matches’ is not disabled, the search will try to instantly match every single character you type.
+
+Finally, if you are using the BracketHighlighter plugin, you’ll need to disable it by running ‘BracketHighlighter: Toggle Global Enable’ from the command line. If not, Sublime will behave very sluggishly.
 
 ### Sublime Text Extract Call Stack tool
 
@@ -33,6 +37,4 @@ Note: This tool may take a while to run on large files (i.e. files greater than 
 ### Demonstration
 To see how this plugin can be used refer to the following:
 - <a href="http://www.jaymathew.com/?p=588" target="_blank">Using Syntax highlighting and the Tidy PeopleCode Trace tool</a>
-<br>
 - <a href="http://www.jaymathew.com/?p=18140" target="_blank">Using the Extract PeopleCode Call Stack tool</a>
-
