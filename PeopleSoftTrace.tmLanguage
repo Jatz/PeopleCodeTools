@@ -11,26 +11,6 @@
 	<key>patterns</key>
 	<array>
 		<dict>
-			<key>captures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.other.import.pcode</string>
-				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>storage.modifier.import.pcode</string>
-				</dict>
-				<key>3</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.terminator.pcode</string>
-				</dict>
-			</dict>
-		</dict>
-		<dict>
 			<key>include</key>
 			<string>#code</string>
 		</dict>
@@ -87,6 +67,14 @@
 				</dict>
 				<dict>
 					<key>include</key>
+					<string>#comments-enclosing</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#comments-rem</string>
+				</dict>
+				<dict>
+					<key>include</key>
 					<string>#methods</string>
 				</dict>
 				<dict>
@@ -96,10 +84,6 @@
 				<dict>
 					<key>include</key>
 					<string>#events</string>
-				</dict>
-				<dict>
-					<key>include</key>
-					<string>#assertions</string>
 				</dict>
 				<dict>
 					<key>include</key>
@@ -124,6 +108,42 @@
 				<dict>
 					<key>include</key>
 					<string>#all-types</string>
+				</dict>
+			</array>
+		</dict>
+		<key>comments-enclosing</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>begin</key>
+					<string>/\*</string>
+					<key>captures</key>
+					<dict>
+						<key>0</key>
+						<dict>
+							<key>name</key>
+							<string>punctuation.definition.comment.pcode</string>
+						</dict>
+					</dict>
+					<key>end</key>
+					<string>\*/</string>
+					<key>name</key>
+					<string>comment.block.pcode</string>
+				</dict>
+			</array>
+		</dict>
+		<key>comments-rem</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>comment</key>
+					<string>comment out single line REM statements</string>
+					<key>match</key>
+					<string>\s*\b(?&lt;!&amp;)[rR][eE][mM](.*)$</string>
+					<key>name</key>
+					<string>comment.block.pcode</string>
 				</dict>
 			</array>
 		</dict>

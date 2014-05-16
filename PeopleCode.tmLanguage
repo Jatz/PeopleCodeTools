@@ -12,26 +12,6 @@
 	<key>patterns</key>
 	<array>
 		<dict>
-			<key>captures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.other.import.pcode</string>
-				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>storage.modifier.import.pcode</string>
-				</dict>
-				<key>3</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.terminator.pcode</string>
-				</dict>
-			</dict>
-		</dict>
-		<dict>
 			<key>include</key>
 			<string>#code</string>
 		</dict>
