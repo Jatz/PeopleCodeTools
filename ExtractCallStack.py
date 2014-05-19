@@ -67,7 +67,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             # Perform initial formatting based on Nest value
             for lineContents in lines:
                 # extract Nest value from lineContents
-                match = re.search(r'(start-ext|start|end-ext|end|resume|reend).*Nest=(\d+)', lineContents)
+                match = re.search(r'(start-ext|start|end-ext|end|resume|reend)\s+Nest=(\d+)', lineContents)
                 if match:
                     nestLevel = int(match.group(2)) - lowestNestValue
 
@@ -80,13 +80,13 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                     if match.group(1) == 'start':
                         lastCall = 'start'
                         # E.g. >>> start     Nest=12  DERIVED_ADDR.ADDRESSLONG.RowInit
-                        matchExt = re.search(r'start.*Nest=(?:\d+).*?((?:\w+\.?)+)', lineContents)
+                        matchExt = re.search(r'start\s+Nest=(?:\d+).*?((?:\w+\.?)+)', lineContents)
                         extContext.append(matchExt.group(1))
                     if match.group(1) == 'start-ext':
                         lastCall = 'start'
                         # keep track of start-ext location so that we can append the location to call private and call int lines
                         # E.g. >>> start-ext Nest=14 ActivePrograms_SCT SSR_STUDENT_RECORDS.SR_StudentData.StudentActivePrograms.OnExecute
-                        matchExt = re.search(r'start-ext.*Nest=(?:\d+)\s+\w+\s+((?:\w+\.?)+)', lineContents)
+                        matchExt = re.search(r'start-ext\s+Nest=(?:\d+)\s+\w+\s+((?:\w+\.?)+)', lineContents)
                         extContext.append(matchExt.group(1))
                     if  match.group(1) == 'resume':
                         lastCall = 'resume'
@@ -171,6 +171,8 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             sessionSpecificString = re.sub(r'Dur=.*', '', sessionSpecificString)
             sessionSpecificString = re.sub(r'[\s]#?params=\d+', '', sessionSpecificString)
 
+
+
             # Are there any resume or reend statements?
             # If so, then reformat the session specific string based on the resume and reend statements
             found = re.search('(resume|reend)\s(.*)', sessionSpecificString)
@@ -189,6 +191,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                 resumeResults = {}
                 reendResults = {}
                 endResults = {}
+
                 # Find resume and reend statements and store the line numbers in a dict along with the results
                 for lineNo, line in results.items():
                     match = re.search(r'(resume|reend|end)\s.*?((?:\w+\.?)+((?:\s(?:\w+\.?)+)?))', line)
@@ -226,9 +229,6 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                 sessionSpecificString = ''
                 for lineNo, line in results.items():
                     sessionSpecificString = sessionSpecificString + results[lineNo] + '\n'
-
-                # if there is a resume within a resume there might be two tabs, so just replace the two tabs with one tab
-                sessionSpecificString = re.sub(r'\t\t', '\t', sessionSpecificString)
 
             # Clean lines
             # Remove the end-ext, End-Function, end and reend calls, since we no longer need them
