@@ -21,12 +21,17 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
         # For example: the following call method line will be ignored since there is a start-ext immediately after it:
         # PSAPPSRV.4556 (2426)   1-8760   14.05.07    0.000000       call method  SSF_CFS:SSF_CFQKey.SSFQKeyString #params=7
         # PSAPPSRV.4556 (2426)   1-8761   14.05.07    0.000000   >>> start-ext Nest=01 SSFQKeyString SSF_CFS.SSF_CFQKey.OnExecute getter
-        newViewString = re.sub(r'(?m)(?:.*call\s+(getter|setter|method|constructor).*)\n(.*>>>\sstart-ext.*)', '\\2 \\1', originalViewContent)
+        newViewString = re.sub(r'(?m)(?:.*call\s+(getter|setter|method|constructor).*)\n(.*>>>\sstart-ext.*)', r'\2 \1', originalViewContent)
 
         # Add an end-get for relevant lines
         # I.e. Find all internal call getters and add end-gets. This is done by matching line number before the call getter and after the getter method has finished
-        # Note: This is really ugly, but I couldn't find a better way to do this. Plus it's all done in one line of code
+        # Note: This is really ugly, but I couldn't find a better way to do this. Plus it's all 'easily' done in one line of code
         newViewString = re.sub(r'(\d+:.*)(\n.*call getter\s+(?:\w+:?)+\.\w+[\s\S]*?)(.*)(\1)', r'\1\2\3end-get;', newViewString)
+
+        # First, remove all end-sets as they don't seem to always be there. Next, re-add an end-set for relevant lines
+        # Note: Once again, this is really ugly, but I couldn't find a better way to do this. I wish the trace always showed end-set and end-get statements!!
+        newViewString = re.sub(r'.*end-set;', '', newViewString)
+        newViewString = re.sub(r'(.*call setter\s+(?:\w+:?)+\.(\w+).*)([\s\S]+?set\s\2[\s\S]+?[\s\S]+?)(Str\[\d+\]=\2)', r'\1\3end-set;', newViewString)
 
         # Extract all lines containing start, end, Nest=, call int, call private, call method and End-Function
         # Note: we ignore call constructor and call setter
@@ -107,8 +112,6 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                         # if first 4 chars are 'call'
                         if match.group(1)[:4] == 'call':
 
-                            lastCall='call'
-
                             if lastCall in ['start', 'resume'] or (lastCall[:4] == 'call'):
                                 nestLevel += 1
 
@@ -140,12 +143,14 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
 
 
                         else:
-                            if match.group(1) == 'End-Function':
-                                lastCall ='endFunction'
-                            if match.group(1) == 'end-get':
-                                lastCall = 'endGet'
-                            if match.group(1) == 'end-set':
-                                lastCall = 'endSet'
+                            if match.group(1)[:3].lower() == 'end':
+                                if match.group(1) == 'End-Function':
+                                    lastCall ='endFunction'
+                                if match.group(1) == 'end-get':
+                                    lastCall = 'endGet'
+                                if match.group(1) == 'end-set':
+                                    lastCall = 'endSet'
+                                nestLevel -= 1
 
                     startIndex = 0
 
@@ -157,12 +162,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                     else:
                         sessionSpecificString = sessionSpecificString + lineContents + '\n'
 
-                    # if any of the last calls start with 'call'
-                    if lastCall[:4] == 'call':
-                        nestLevel += 1
-
-                    if lastCall in ['endFunction', 'endGet', 'endSet']:
-                        nestLevel -= 1
+                prevLineContents = lineContents
 
             # Remove Nest from each line since we no longer need it
             sessionSpecificString = re.sub(r'\s+Nest=\d+', '', sessionSpecificString)
