@@ -23,6 +23,7 @@ This tool ONLY applies to PeopleSoft Trace Files that have the following PeopleC
 - Program Starts (64)
 - External function calls (128)
 - Internal function calls (256)
+- Return parameter values (1024)
 - Each statement (2048)
 
 Trace files that have not been generated using these trace flags will not produce enough information for the tool to format the call stack. To use the tool, open a .tracesql file in Sublime Text and then run the "PeopleCode Tools: Extract PeopleCode Call Stack" command from the command palette.
