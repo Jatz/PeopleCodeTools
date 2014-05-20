@@ -171,8 +171,6 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             sessionSpecificString = re.sub(r'Dur=.*', '', sessionSpecificString)
             sessionSpecificString = re.sub(r'[\s]#?params=\d+', '', sessionSpecificString)
 
-
-
             # Are there any resume or reend statements?
             # If so, then reformat the session specific string based on the resume and reend statements
             found = re.search('(resume|reend)\s(.*)', sessionSpecificString)
