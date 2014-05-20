@@ -251,8 +251,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             sessionSpecificString = re.sub('start-ext\s(\w+)\s(.*)\s(constructor|method|getter|setter)', r'call \3 \1 \2', sessionSpecificString)
 
             # Finally rename CI functions
-            sessionSpecificString = re.sub(r'(?m)start-ext\s(\w+)\s(\w+\.\w+)$', r'call function (CI) \1 \2', sessionSpecificString)
-
+            sessionSpecificString = re.sub(r'(?m)start-ext\s(\w+)\s(\w+\.\w+)$', r'call function \1 \2', sessionSpecificString)
 
             # # Replace any colons with dots
             sessionSpecificString = re.sub(':', r'.', sessionSpecificString)
