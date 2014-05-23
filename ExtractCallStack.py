@@ -69,14 +69,27 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             # extContext will store a list of contexts to keep track of all the start and start-ext calls
             extContext = []
 
+            # resumeContext will store a list of contexts to keep track of all the resume calls
+            resumeContext = []
+
             # Perform initial formatting based on Nest value
             for lineContents in lines:
                 # extract Nest value from lineContents
                 match = re.search(r'(start-ext|start|end-ext|end|resume|reend)\s+Nest=(\d+)', lineContents)
                 if match:
+                    prevNestLevel = nestLevel
                     nestLevel = int(match.group(2)) - lowestNestValue
 
+                    # Always ensure that the next nest level is always only indented by 1 tab, and not more
+                    if (nestLevel - prevNestLevel) > 1:
+                        nestLevel = prevNestLevel + 1
+
                     startIndex = 0
+
+                    # If within a resume context
+                    if resumeContext:
+                        # The resume code already adds an extra tab, so don't need to indent here
+                        nestLevel -= 1
 
                     for x in range(startIndex,nestLevel):
                         lineContents = '\t' + lineContents
@@ -95,6 +108,8 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                         extContext.append(matchExt.group(1))
                     if  match.group(1) == 'resume':
                         lastCall = 'resume'
+                        resumeExt = re.search(r'resume\s+Nest=(?:\d+)\s+\.\s+((?:\w+\.?)+)', lineContents)
+                        resumeContext.append(resumeExt.group(1))
                     if match.group(1) == 'end-ext':
                         lastCall = 'end'
                         # remove the last element from extContext
@@ -105,6 +120,8 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                         extContext.pop()
                     if match.group(1) == 'reend':
                         lastCall = 'reend'
+                        # remove the last element from resumeContext
+                        resumeContext.pop()
 
                 else:
                     match = re.search(r'(call (int|setter|getter|private|method)|End-Function|end-get|end-set)', lineContents)
@@ -112,7 +129,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                         # if first 4 chars are 'call'
                         if match.group(1)[:4] == 'call':
 
-                            if lastCall in ['start', 'resume'] or (lastCall[:4] == 'call'):
+                            if lastCall == 'start' or (lastCall[:4] == 'call'):
                                 nestLevel += 1
 
                             if match.group(1) == 'call method':
