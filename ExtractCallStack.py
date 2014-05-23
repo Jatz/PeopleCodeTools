@@ -80,7 +80,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                     prevNestLevel = nestLevel
                     nestLevel = int(match.group(2)) - lowestNestValue
 
-                    # Always ensure that the next nest level is always only indented by 1 tab, and not more
+                    # Always ensure that the next nest level is only indented by 1 tab, and not more
                     if (nestLevel - prevNestLevel) > 1:
                         nestLevel = prevNestLevel + 1
 
