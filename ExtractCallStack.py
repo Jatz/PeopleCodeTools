@@ -207,7 +207,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                 reendResults = {}
                 endResults = {}
 
-                # Find resume and reend statements and store the line numbers in a dict along with the results
+                # Find resume, reend and end statements and store the line numbers in a dict along with the results
                 for lineNo, line in results.items():
                     match = re.search(r'(resume|reend|end)\s.*?((?:\w+\.?)+((?:\s(?:\w+\.?)+)?))', line)
                     if match:
@@ -259,18 +259,18 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             # Rename eligible call methods to call constructors
             sessionSpecificString = re.sub(r'(?m)(?m)call\smethod\s+(\w+)(\s.*\1.OnExecute)', r'call constructor \1\2', sessionSpecificString)
 
-            # # Rename to call function those start-ext calls that do not have getters, setters or constructors appended
+            # Rename to call function those start-ext calls that do not have getters, setters or constructors appended
             sessionSpecificString = re.sub(r'(?m)start-ext\s(\w+)\s(\w+\.\w+\.\w+)$', r'call function \1 \2', sessionSpecificString)
 
-            # # Replace any remaining start-ext with calls based on the last word in the line
-            # # e.g. start-ext isSaveWarning PT_NAV2.NavOptions.OnExecute getter
-            # # becomes call getter isSaveWarning PT_NAV2.NavOptions.OnExecute
+            # Replace any remaining start-ext with calls based on the last word in the line
+            # e.g. start-ext isSaveWarning PT_NAV2.NavOptions.OnExecute getter
+            # becomes call getter isSaveWarning PT_NAV2.NavOptions.OnExecute
             sessionSpecificString = re.sub('start-ext\s(\w+)\s(.*)\s(constructor|method|getter|setter)', r'call \3 \1 \2', sessionSpecificString)
 
             # Finally rename CI functions
             sessionSpecificString = re.sub(r'(?m)start-ext\s(\w+)\s(\w+\.\w+)$', r'call function \1 \2', sessionSpecificString)
 
-            # # Replace any colons with dots
+            # Replace any colons with dots
             sessionSpecificString = re.sub(':', r'.', sessionSpecificString)
 
             # We now have the complete callstack for the session
