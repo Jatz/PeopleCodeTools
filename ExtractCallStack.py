@@ -60,7 +60,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
 
         for sessionNo in sessionNos:
 
-            print('sessionNos %s' % sessionNos)
+            # print('sessionNos %s' % sessionNos)
 
             # Extract only those lines relating to the sessionNo
             str_list = re.findall(r'PSAPPSRV\.\d+\s+\(%s\).*' % sessionNo, newViewString, re.MULTILINE)
@@ -94,7 +94,7 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
             for lineContents in lines:
                 # extract Nest value from lineContents
 
-                print(lineContents)
+                # print(lineContents)
 
 
                 match = re.search(r'(start-ext|start|end-ext|end|resume|reend)\s+Nest=(\d+)', lineContents)
@@ -122,14 +122,14 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                         lastCall = 'start'
                         # E.g. >>> start     Nest=12  DERIVED_ADDR.ADDRESSLONG.RowInit
                         matchExt = re.search(r'start\s+Nest=(?:\d+).*?((?:\w+\.?)+)', lineContents)
-                        print('contents of extContext before push: %s' % extContext)
+                        # print('contents of extContext before push: %s' % extContext)
                         extContext.append(matchExt.group(1))
                     if match.group(1) == 'start-ext':
                         lastCall = 'start'
                         # keep track of start-ext location so that we can append the location to call private and call int lines
                         # E.g. >>> start-ext Nest=14 ActivePrograms_SCT SSR_STUDENT_RECORDS.SR_StudentData.StudentActivePrograms.OnExecute
                         matchExt = re.search(r'start-ext\s+Nest=(?:\d+)\s+\w+\s+((?:\w+\.?)+)', lineContents)
-                        print('contents of extContext before push: %s' % extContext)
+                        # print('contents of extContext before push: %s' % extContext)
                         extContext.append(matchExt.group(1))
                     if  match.group(1) == 'resume':
                         lastCall = 'resume'
@@ -138,12 +138,12 @@ class ExtractpccallstackCommand(sublime_plugin.TextCommand):
                     if match.group(1) == 'end-ext':
                         lastCall = 'end'
                         # remove the last element from extContext
-                        print('contents of extContext before pop: %s' % extContext)
+                        # print('contents of extContext before pop: %s' % extContext)
                         extContext.pop()
                     if match.group(1) == 'end':
                         lastCall = 'end'
                         # remove the last element from extContext
-                        print('contents of extContext before pop: %s' % extContext)
+                        # print('contents of extContext before pop: %s' % extContext)
                         extContext.pop()
                     if match.group(1) == 'reend':
                         lastCall = 'reend'
