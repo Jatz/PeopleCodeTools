@@ -21,16 +21,16 @@
 		<key>classes</key>
 		<dict>
 			<key>begin</key>
-			<string>(?=class\s+[\w]+$)</string>
+			<string>(?i)(?=class\s+[\w]+$)</string>
 			<key>end</key>
-			<string>(?=end-class;)</string>
+			<string>(?i)(?=end-class;)</string>
 			<key>name</key>
 			<string>meta.method.pcode</string>
 			<key>patterns</key>
 			<array>
 				<dict>
 					<key>begin</key>
-					<string>(class)\s+([\w]+)$</string>
+					<string>(?i)(class)\s+([\w]+)$</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -45,7 +45,7 @@
 						</dict>
 					</dict>
 					<key>end</key>
-					<string>(?=end-class)</string>
+					<string>(?i)(?=end-class)</string>
 					<key>name</key>
 					<string>meta.method.identifier.pcode</string>
 					<key>patterns</key>
@@ -82,6 +82,10 @@
 					<key>include</key>
 					<string>#events</string>
 				</dict>
+                <dict>
+                    <key>include</key>
+                    <string>#parameters</string>
+                </dict>
 				<dict>
 					<key>include</key>
 					<string>#assertions</string>
@@ -234,13 +238,13 @@
 			<array>
 				<dict>
 					<key>match</key>
-					<string>\b(true|false|null)\b</string>
+					<string>(?i)\b(true|false|null)\b</string>
 					<key>name</key>
 					<string>constant.language.pcode</string>
 				</dict>
 				<dict>
 					<key>match</key>
-					<string>\b(%This|%Super)\b</string>
+					<string>(?i)\b(%This|%Super)\b</string>
 					<key>name</key>
 					<string>variable.language.pcode</string>
 				</dict>
@@ -263,16 +267,16 @@
 		<key>functions</key>
 		<dict>
 			<key>begin</key>
-			<string>(?=Function\s+[\w]+\(.*\).*)</string>
+			<string>(?i)(?=Function\s+[\w]+\(.*\).*)</string>
 			<key>end</key>
-			<string>(?=End-Function;)</string>
+			<string>(?i)(?=End-Function;)</string>
 			<key>name</key>
 			<string>meta.Function.pcode</string>
 			<key>patterns</key>
 			<array>
 				<dict>
 					<key>begin</key>
-					<string>(Function)\s+([\w]+)(\(.*\)).*</string>
+					<string>(?i)(Function)\s+([\w]+)(\(.*\)).*</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -287,7 +291,7 @@
 						</dict>
 					</dict>
 					<key>end</key>
-					<string>(?=End-Function)</string>
+					<string>(?i)(?=End-Function)</string>
 					<key>name</key>
 					<string>meta.Function.identifier.pcode</string>
 					<key>patterns</key>
@@ -306,19 +310,19 @@
 			<array>
 				<dict>
 					<key>match</key>
-					<string>\b(SetSaveWarningFilter|array|of|And|out|ApiObject|boolean|datetime|Break|Returns|catch|CompIntfc|Component|Constant|Declare|Else|Error|Exit|extends|implements|False|Field|File|Global|import|Integer|private|end-class|end-set|end-get|Item|Local|Null|number|Or|As|date|Row|Record|Repeat|Return|Rowset|Step|Scroll|string|property|instance|Then|Throw|To|True|Warning|When|Abs|AccruableDays|AccrualFactor|Acos|ActiveRowCount|AddAttachment|AddEmailAddress|AddKeyListItem|AddSystemPauseTimes|AddToDate|AddToDateTime|AddToTime|All|AllOrNone|AllowEmplIdChg|Amortize|Asin|Atan|BlackScholesCall|BlackScholesPut|BootstrapYTMs|BPurgeDomainStatus|BulkDeleteField|BulkInsertField|BulkModifyPageFieldOrder|BulkUpdateIndexes|CallAppEngine|CancelPubHeaderXmlDoc|CancelPubXmlDoc|CancelSubXmlDoc|ChangeEmailAddress|Char|CharType|CheckMenuItem|Clean|ClearKeyList|ClearSearchDefault|ClearSearchEdit|Panel|PanelGroup|Code|CollectGarbage|CommitWork|CompareLikeFields|ComponentChanged|ConnectorRequest|ConnectorRequestURL|ContainsCharType|ContainsOnlyCharType|ConvertChar|ConvertCurrency|ConvertDatetimeToBase|ConvertRate|ConvertTimeToBase|CopyAttachments|CopyFields|CopyFromJavaArray|CopyRow|CopyToJavaArray|Cos|Cot|Count|create|CreateAnalyticInstance|CreateArray|CreateArrayAny|CreateArrayRept|CreateDirectory|CreateException|CreateJavaArray|CreateJavaObject|CreateMCFIMInfo|CreateMessage|CreateObject|CreateObjectArray|CreateProcessRequest|CreateRecord|CreateRowset|CreateRowsetCache|CreateSOAPDoc|CreateSQL|CreateWSDLMessage|CreateXmlDoc|CubicSpline|CurrEffDt|CurrEffRowNum|CurrEffSeq|CurrentLevelNumber|CurrentRowNumber|Date|Date3|DatePart|DateTime6|DateTimeToHTTP|DateTimeToLocalizedString|DateTimeToTimeZone|DateTimeValue|DateValue|Day|Days|Days360|Days365|DBCSTrim|DBPatternMatch|Decrypt|Degrees|DeleteAttachment|DeleteEmailAddress|DeleteImage|DeleteItem|DeleteRecord|DeleteRow|DeleteSQL|DeleteSystemPauseTimes|DeQueue|DetachAttachment|DisableMenuItem|DiscardRow|DoCancel|DoModal|DoModalComponent|DoSave|DoSaveNow|EnableMenuItem|EncodeURL|EncodeURLForQueryString|Encrypt|EncryptNodePswd|EndMessage|EndModal|EndModalComponent|EnQueue|EscapeHTML|EscapeJavascriptString|EscapeWML|Exact|Exec|ExecuteRolePeopleCode|ExecuteRoleQuery|ExecuteRoleWorkflowQuery|Exp|ExpandBindVar|ExpandEnvVar|ExpandSqlBinds|Fact|FetchSQL|FetchValue|FieldChanged|FileExists|Find|FindCodeSetValues|FindFiles|FlushBulkInserts|FormatDateTime|Forward|GenerateActGuideContentUrl|GenerateActGuidePortalUrl|GenerateActGuideRelativeUrl|GenerateComponentContentRelURL|GenerateComponentContentURL|GenerateComponentPortalRelURL|GenerateComponentPortalURL|GenerateComponentRelativeURL|GenerateExternalPortalURL|GenerateExternalRelativeURL|GenerateHomepagePortalURL|GenerateHomepageRelativeURL|GenerateMobileTree|GenerateQueryContentURL|GenerateQueryPortalURL|GenerateQueryRelativeURL|GenerateScriptContentRelURL|GenerateScriptContentURL|GenerateScriptPortalRelURL|GenerateScriptPortalURL|GenerateScriptRelativeURL|GenerateTree|GenerateWorklistPortalURL|GenerateWorklistRelativeURL|get()|GetAESection|GetAnalyticGridCreateObject|GetAnalyticInstance|GetArchPubHeaderXmlDoc|GetArchPubXmlDoc|GetArchSubXmlDoc|GetAttachment|GetBiDoc|GetCalendarDate|GetChart|GetChartURL|GetCwd|GetEnv|GetField|GetFile|GetGrid|GetHTMLText|GetImageExtents|GetInterlink|GetJavaClass|GetLevel0|GetMessage|GetMessageInstance|GetMessageXmlDoc|GetMethodNames|GetNextNumber|GetNextNumberWithGaps|GetNextNumberWithGapsCommit|GetNextProcessInstance|GetNRXmlDoc|GetPage|GetProgramFunctionInfo|GetPubContractInstance|GetPubHeaderXmlDoc|GetPubXmlDoc|GetRecord|GetRelField|GetRow|GetRowset|GetRowsetCache|GetSession|GetSetId|GetSQL|GetStoredFormat|GetSubContractInstance|GetSubXmlDoc|GetSyncLogData|GetURL|GetUserOption|GetWLFieldValue|Gray|UnGray|Hash|HermiteCubic|Hide|UnHide|HideMenuItem|HideRow|HideScroll|HistVolatility|Hour|IBPurgeNodesDown|Idiv|InboundPublishXmlDoc|InitChat|InsertImage|InsertItem|InsertRow|Int|IsAlpha|IsAlphaNumeric|IsDate|IsDateTime|IsDaylightSavings|IsDigits|IsDisconnectedClient|IsHidden|IsMenuItemAuthorized|IsMessageActive|IsModal|IsModalComponent|IsNumber|IsSearchDialog|IsTime|IsUserInPermissionList|IsUserInRole|IsUserNumber|Left|Len|LinearInterp|Ln|Log10|LogObjectUse|Lower|LTrim|MarkPrimaryEmailAddress|MarkWLItemWorked|Max|MCFBroadcast|MessageBox|Min|Minute|Mod|Month|MSFGetNextNumber|MsgGet|MsgGetExplainText|MsgGetText|NextEffDt|NextRelEffDt|NodeDelete|NodeRename|NodeSaveAs|NodeTranDelete|None|NotifyQ|Not|NumberToDisplayString|NumberToString|ObjectDoMethod|ObjectDoMethodArray|ObjectGetProperty|ObjectSetProperty|OnlyOne|OnlyOneOrNone|PingNode|PriorEffDt|PriorRelEffDt|PriorValue|Product|Proper|PublishXmlDoc|PutAttachment|Quote|Radians|Rand|RecordChanged|RecordDeleted|RecordNew|RelNodeTranDelete|RemoteCall|RemoveDirectory|RenameDBField|RenamePage|RenameRecord|Replace|Rept|ReSubmitPubHeaderXmlDoc|ReSubmitPubXmlDoc|ReSubmitSubXmlDoc|ReturnToServer|ReValidateNRXmlDoc|RevalidatePassword|Right|Round|RoundCurrency|RowCount|RowFlush|RowScrollSelect|RowScrollSelectNew|RTrim|ScrollFlush|ScrollSelect|ScrollSelectNew|Second|SendMail|SetAuthenticationResult|SetChannelStatus|SetComponentChanged|SetCursorPos|SetDBFieldAuxFlag|SetDBFieldCharDefn|SetDBFieldFormat|SetDBFieldFormatLength|SetDBFieldLabel|SetDBFieldLength|SetDBFieldNotUsed|SetDefault|SetDefaultAll|SetDefaultNext|SetDefaultNextRel|SetDefaultPrior|SetDefaultPriorRel|SetDisplayFormat|SetLabel|SetLanguage|SetMessageStatus|SetNextPage|SetPageFieldPageFieldName|SetPasswordExpired|SetPostReport|SetRecFieldEditTable|SetRecFieldKey|SetReEdit|SetSearchDefault|SetSearchDialogBehavior|SetSearchEdit|SetTempTableInstance|SetTracePC|SetTraceSQL|SetupScheduleDefnItem|SetUserOption|Sign|Sin|SinglePaymentPV|SortScroll|Split|SQLExec|Sqrt|StartWork|StopFetching|StoreSQL|Substitute|Substring|String|SwitchUser|SyncRequestXmlDoc|Tan|Time|Time3|TimePart|TimeToTimeZone|TimeValue|TimeZoneOffset|TotalRowCount|Transfer|TransferExact|TransferMobilePage|TransferNode|TransferPage|TransferPanel|TransferPortal|Transform|TransformEx|TransformExCache|TreeDetailInNode|TriggerBusinessEvent|Truncate|UnCheckMenuItem|Unencode|get|set|Ungray|Unhide|UnhideRow|UnhideScroll|UniformSeriesPV|UpdateSysVersion|UpdateValue|UpdateXmlDoc|Upper|Value|ValueUser|ViewAttachment|ViewContentURL|ViewURL|Weekday|WinEscape|WinExec|WinMessage|WriteToLog|Year|class|End-Class|end-evaluate|End-Evaluate|End-For|End-Function|End-If|method|end-method|end-try|End-While|evaluate|Evaluate|For|Function|If|try|while|XmlNode|SQL)\b</string>
+					<string>(?i)\b(SetSaveWarningFilter|array|of|And|out|ApiObject|boolean|datetime|Break|Returns|catch|CompIntfc|Component|Constant|Declare|Else|Error|Exit|extends|implements|False|Field|File|Global|import|Integer|private|end-class|end-set|end-get|Item|Local|Null|number|Or|As|date|Row|Record|Repeat|Return|Rowset|Step|Scroll|string|property|instance|Then|Throw|To|True|Warning|When|Abs|AccruableDays|AccrualFactor|Acos|ActiveRowCount|AddAttachment|AddEmailAddress|AddKeyListItem|AddSystemPauseTimes|AddToDate|AddToDateTime|AddToTime|All|AllOrNone|AllowEmplIdChg|Amortize|Asin|Atan|BlackScholesCall|BlackScholesPut|BootstrapYTMs|BPurgeDomainStatus|BulkDeleteField|BulkInsertField|BulkModifyPageFieldOrder|BulkUpdateIndexes|CallAppEngine|CancelPubHeaderXmlDoc|CancelPubXmlDoc|CancelSubXmlDoc|ChangeEmailAddress|Char|CharType|CheckMenuItem|Clean|ClearKeyList|ClearSearchDefault|ClearSearchEdit|Panel|PanelGroup|Code|CollectGarbage|CommitWork|CompareLikeFields|ComponentChanged|ConnectorRequest|ConnectorRequestURL|ContainsCharType|ContainsOnlyCharType|ConvertChar|ConvertCurrency|ConvertDatetimeToBase|ConvertRate|ConvertTimeToBase|CopyAttachments|CopyFields|CopyFromJavaArray|CopyRow|CopyToJavaArray|Cos|Cot|Count|create|CreateAnalyticInstance|CreateArray|CreateArrayAny|CreateArrayRept|CreateDirectory|CreateException|CreateJavaArray|CreateJavaObject|CreateMCFIMInfo|CreateMessage|CreateObject|CreateObjectArray|CreateProcessRequest|CreateRecord|CreateRowset|CreateRowsetCache|CreateSOAPDoc|CreateSQL|CreateWSDLMessage|CreateXmlDoc|CubicSpline|CurrEffDt|CurrEffRowNum|CurrEffSeq|CurrentLevelNumber|CurrentRowNumber|Date|Date3|DatePart|DateTime6|DateTimeToHTTP|DateTimeToLocalizedString|DateTimeToTimeZone|DateTimeValue|DateValue|Day|Days|Days360|Days365|DBCSTrim|DBPatternMatch|Decrypt|Degrees|DeleteAttachment|DeleteEmailAddress|DeleteImage|DeleteItem|DeleteRecord|DeleteRow|DeleteSQL|DeleteSystemPauseTimes|DeQueue|DetachAttachment|DisableMenuItem|DiscardRow|DoCancel|DoModal|DoModalComponent|DoSave|DoSaveNow|EnableMenuItem|EncodeURL|EncodeURLForQueryString|Encrypt|EncryptNodePswd|EndMessage|EndModal|EndModalComponent|EnQueue|EscapeHTML|EscapeJavascriptString|EscapeWML|Exact|Exec|ExecuteRolePeopleCode|ExecuteRoleQuery|ExecuteRoleWorkflowQuery|Exp|ExpandBindVar|ExpandEnvVar|ExpandSqlBinds|Fact|FetchSQL|FetchValue|FieldChanged|FileExists|Find|FindCodeSetValues|FindFiles|FlushBulkInserts|FormatDateTime|Forward|GenerateActGuideContentUrl|GenerateActGuidePortalUrl|GenerateActGuideRelativeUrl|GenerateComponentContentRelURL|GenerateComponentContentURL|GenerateComponentPortalRelURL|GenerateComponentPortalURL|GenerateComponentRelativeURL|GenerateExternalPortalURL|GenerateExternalRelativeURL|GenerateHomepagePortalURL|GenerateHomepageRelativeURL|GenerateMobileTree|GenerateQueryContentURL|GenerateQueryPortalURL|GenerateQueryRelativeURL|GenerateScriptContentRelURL|GenerateScriptContentURL|GenerateScriptPortalRelURL|GenerateScriptPortalURL|GenerateScriptRelativeURL|GenerateTree|GenerateWorklistPortalURL|GenerateWorklistRelativeURL|get()|GetAESection|GetAnalyticGridCreateObject|GetAnalyticInstance|GetArchPubHeaderXmlDoc|GetArchPubXmlDoc|GetArchSubXmlDoc|GetAttachment|GetBiDoc|GetCalendarDate|GetChart|GetChartURL|GetCwd|GetEnv|GetField|GetFile|GetGrid|GetHTMLText|GetImageExtents|GetInterlink|GetJavaClass|GetLevel0|GetMessage|GetMessageInstance|GetMessageXmlDoc|GetMethodNames|GetNextNumber|GetNextNumberWithGaps|GetNextNumberWithGapsCommit|GetNextProcessInstance|GetNRXmlDoc|GetPage|GetProgramFunctionInfo|GetPubContractInstance|GetPubHeaderXmlDoc|GetPubXmlDoc|GetRecord|GetRelField|GetRow|GetRowset|GetRowsetCache|GetSession|GetSetId|GetSQL|GetStoredFormat|GetSubContractInstance|GetSubXmlDoc|GetSyncLogData|GetURL|GetUserOption|GetWLFieldValue|Gray|UnGray|Hash|HermiteCubic|Hide|UnHide|HideMenuItem|HideRow|HideScroll|HistVolatility|Hour|IBPurgeNodesDown|Idiv|InboundPublishXmlDoc|InitChat|InsertImage|InsertItem|InsertRow|Int|IsAlpha|IsAlphaNumeric|IsDate|IsDateTime|IsDaylightSavings|IsDigits|IsDisconnectedClient|IsHidden|IsMenuItemAuthorized|IsMessageActive|IsModal|IsModalComponent|IsNumber|IsSearchDialog|IsTime|IsUserInPermissionList|IsUserInRole|IsUserNumber|Left|Len|LinearInterp|Ln|Log10|LogObjectUse|Lower|LTrim|MarkPrimaryEmailAddress|MarkWLItemWorked|Max|MCFBroadcast|MessageBox|Min|Minute|Mod|Month|MSFGetNextNumber|MsgGet|MsgGetExplainText|MsgGetText|NextEffDt|NextRelEffDt|NodeDelete|NodeRename|NodeSaveAs|NodeTranDelete|None|NotifyQ|Not|NumberToDisplayString|NumberToString|ObjectDoMethod|ObjectDoMethodArray|ObjectGetProperty|ObjectSetProperty|OnlyOne|OnlyOneOrNone|PingNode|PriorEffDt|PriorRelEffDt|PriorValue|Product|Proper|PublishXmlDoc|PutAttachment|Quote|Radians|Rand|RecordChanged|RecordDeleted|RecordNew|RelNodeTranDelete|RemoteCall|RemoveDirectory|RenameDBField|RenamePage|RenameRecord|Replace|Rept|ReSubmitPubHeaderXmlDoc|ReSubmitPubXmlDoc|ReSubmitSubXmlDoc|ReturnToServer|ReValidateNRXmlDoc|RevalidatePassword|Right|Round|RoundCurrency|RowCount|RowFlush|RowScrollSelect|RowScrollSelectNew|RTrim|ScrollFlush|ScrollSelect|ScrollSelectNew|Second|SendMail|SetAuthenticationResult|SetChannelStatus|SetComponentChanged|SetCursorPos|SetDBFieldAuxFlag|SetDBFieldCharDefn|SetDBFieldFormat|SetDBFieldFormatLength|SetDBFieldLabel|SetDBFieldLength|SetDBFieldNotUsed|SetDefault|SetDefaultAll|SetDefaultNext|SetDefaultNextRel|SetDefaultPrior|SetDefaultPriorRel|SetDisplayFormat|SetLabel|SetLanguage|SetMessageStatus|SetNextPage|SetPageFieldPageFieldName|SetPasswordExpired|SetPostReport|SetRecFieldEditTable|SetRecFieldKey|SetReEdit|SetSearchDefault|SetSearchDialogBehavior|SetSearchEdit|SetTempTableInstance|SetTracePC|SetTraceSQL|SetupScheduleDefnItem|SetUserOption|Sign|Sin|SinglePaymentPV|SortScroll|Split|SQLExec|Sqrt|StartWork|StopFetching|StoreSQL|Substitute|Substring|String|SwitchUser|SyncRequestXmlDoc|Tan|Time|Time3|TimePart|TimeToTimeZone|TimeValue|TimeZoneOffset|TotalRowCount|Transfer|TransferExact|TransferMobilePage|TransferNode|TransferPage|TransferPanel|TransferPortal|Transform|TransformEx|TransformExCache|TreeDetailInNode|TriggerBusinessEvent|Truncate|UnCheckMenuItem|Unencode|get|set|Ungray|Unhide|UnhideRow|UnhideScroll|UniformSeriesPV|UpdateSysVersion|UpdateValue|UpdateXmlDoc|Upper|Value|ValueUser|ViewAttachment|ViewContentURL|ViewURL|Weekday|WinEscape|WinExec|WinMessage|WriteToLog|Year|class|End-Class|end-evaluate|End-Evaluate|End-For|End-Function|End-If|method|end-method|end-try|End-While|evaluate|Evaluate|For|Function|If|try|while|XmlNode|SQL)\b</string>
 					<key>name</key>
 					<string>keyword</string>
 				</dict>
 				<dict>
 					<key>match</key>
-					<string>%(Attachment_Success|Attachment_Failed|Action_Add|Action_Correction|Action_UpdateDisplayAll|Action_UpdateDisplay|ApplicationLogFence_Error|ApplicationLogFence_Level1|ApplicationLogFence_Level2|EffDtCheck|ApplicationLogFence_Level3|ApplicationLogFence_Warning|AsOfDate|AuthenticationToken|BPName|ClientDate|ClientTimeZone|CompIntfcName|Component|ContentID|ContentType|Copyright|Currency|Date|DateTime|DbName|DbServerName|DbType|DeviceType|EmailAddress|EmployeeId|ExternalAuthInfo|Exec_Synchronous|FilePath_Absolute|FilePath_Relative|FilePath|HPTabName|Import|IntBroker|IsMultiLanguageEnabled|Language_Base|Language_Data|Language_Data|Language_Use|Language|LocalNode|Market|MaxInterlinkSize|MaxMessageSize|Menu|MobilePage|Mode|MsgResult_OK|NavigatorHomePermissionList|Node|OperatorClass|OperatorId|OperatorRowLevelSecurityClass|OutDestFormat|OutDestType|Page|PanelGroup|Panel|PasswordExpired|PerfTime|PermissionLists|PID|Portal|PrimaryPermissionList|ProcessProfilePermissionList|PSAuthResult|Request|Response|ResultDocument|Roles|RowSecurityPermissionList|RunningInPortal|ServerTimeZone|Session|SignonUserId|SignOnUserPswd|SMTPBlackberryReplyTo|SMTPGuaranteed|SMTPSender|SQLRows|SyncServer|This|ThisMobileObject|Time|TransformData|UserDescription|UserId|WLInstanceID|WLName|Super)\b</string>
+					<string>(?i)%(Attachment_Success|Attachment_Failed|Action_Add|Action_Correction|Action_UpdateDisplayAll|Action_UpdateDisplay|ApplicationLogFence_Error|ApplicationLogFence_Level1|ApplicationLogFence_Level2|EffDtCheck|ApplicationLogFence_Level3|ApplicationLogFence_Warning|AsOfDate|AuthenticationToken|BPName|ClientDate|ClientTimeZone|CompIntfcName|Component|ContentID|ContentType|Copyright|Currency|Date|DateTime|DbName|DbServerName|DbType|DeviceType|EmailAddress|EmployeeId|ExternalAuthInfo|Exec_Synchronous|FilePath_Absolute|FilePath_Relative|FilePath|HPTabName|Import|IntBroker|IsMultiLanguageEnabled|Language_Base|Language_Data|Language_Data|Language_Use|Language|LocalNode|Market|MaxInterlinkSize|MaxMessageSize|Menu|MobilePage|Mode|MsgResult_OK|NavigatorHomePermissionList|Node|OperatorClass|OperatorId|OperatorRowLevelSecurityClass|OutDestFormat|OutDestType|Page|PanelGroup|Panel|PasswordExpired|PerfTime|PermissionLists|PID|Portal|PrimaryPermissionList|ProcessProfilePermissionList|PSAuthResult|Request|Response|ResultDocument|Roles|RowSecurityPermissionList|RunningInPortal|ServerTimeZone|Session|SignonUserId|SignOnUserPswd|SMTPBlackberryReplyTo|SMTPGuaranteed|SMTPSender|SQLRows|SyncServer|This|ThisMobileObject|Time|TransformData|UserDescription|UserId|WLInstanceID|WLName|Super)\b</string>
 					<key>name</key>
 					<string>keyword</string>
 				</dict>
 				<dict>
 					<key>match</key>
-					<string>\b(try|end-try|catch|finally|throw)\b</string>
+					<string>(?i)\b(try|end-try|catch|finally|throw)\b</string>
 					<key>name</key>
 					<string>keyword.control.catch-exception.pcode</string>
 				</dict>
@@ -330,13 +334,13 @@
 				</dict>
 				<dict>
 					<key>match</key>
-					<string>\b(return|break|case|continue|default|Do|While|For|Evaluate|If|Else)\b</string>
+					<string>(?i)\b(return|break|case|continue|default|Do|While|For|Evaluate|If|Else)\b</string>
 					<key>name</key>
 					<string>keyword.control.pcode</string>
 				</dict>
 				<dict>
 					<key>match</key>
-					<string>\b(instanceof)\b</string>
+					<string>(?i)\b(instanceof)\b</string>
 					<key>name</key>
 					<string>keyword.operator.pcode</string>
 				</dict>
@@ -381,16 +385,16 @@
 		<key>methods</key>
 		<dict>
 			<key>begin</key>
-			<string>(?=method\s+[\w]+$)</string>
+			<string>(?i)(?=method\s+[\w]+$)</string>
 			<key>end</key>
-			<string>(?=end-method;)</string>
+			<string>(?i)(?=end-method;)</string>
 			<key>name</key>
 			<string>meta.method.pcode</string>
 			<key>patterns</key>
 			<array>
 				<dict>
 					<key>begin</key>
-					<string>(method)\s+([\w]+)$</string>
+					<string>(?i)(method)\s+([\w]+)$</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -405,7 +409,7 @@
 						</dict>
 					</dict>
 					<key>end</key>
-					<string>(?=end-method)</string>
+					<string>(?i)(?=end-method)</string>
 					<key>name</key>
 					<string>meta.method.identifier.pcode</string>
 					<key>patterns</key>
@@ -467,18 +471,6 @@
 			<key>patterns</key>
 			<array>
 				<dict>
-					<key>include</key>
-					<string>#primitive-arrays</string>
-				</dict>
-				<dict>
-					<key>include</key>
-					<string>#primitive-types</string>
-				</dict>
-				<dict>
-					<key>include</key>
-					<string>#object-types</string>
-				</dict>
-				<dict>
 					<key>match</key>
 					<string>&amp;\w+</string>
 					<key>name</key>
@@ -492,7 +484,7 @@
 			<array>
 				<dict>
 					<key>match</key>
-					<string>\b(?:boolean|number|string)(\[\])*\b</string>
+					<string>(?i)\b(?:boolean|number|string)(\[\])*\b</string>
 					<key>name</key>
 					<string>storage.type.primitive.array.pcode</string>
 				</dict>
@@ -504,7 +496,7 @@
 			<array>
 				<dict>
 					<key>match</key>
-					<string>\b(?:boolean|number|string|Record|Field|Rowset)\b</string>
+					<string>(?i)\b(?:boolean|number|string|Record|Field|Rowset)\b</string>
 					<key>name</key>
 					<string>storage.type.primitive.pcode</string>
 				</dict>
@@ -521,7 +513,7 @@
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>\b(public|private|protected|abstract)\b</string>
+			<string>(?i)\b(public|private|protected|abstract)\b</string>
 		</dict>
 		<key>strings</key>
 		<dict>
